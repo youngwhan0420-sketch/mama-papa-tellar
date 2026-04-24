@@ -1,0 +1,46 @@
+{
+  "total_count": 5,
+  "last_updated": "2026-04-24",
+  "story": [
+    {
+      "story_id": "ST_001",
+      "title": "해와 달이 된 오누이",
+      "file_name": "sun_and_moon.json",
+      "_thumbnail_comment": "이미지 경로 준비 중",
+      "theme": "Family",
+      "duration": "5m"
+    },
+    {
+      "story_id": "ST_002",
+      "title": "선녀와 나무꾼",
+      "file_name": "fairy_and_woodcutter.json",
+      "_thumbnail_comment": "이미지 경로 준비 중",
+      "theme": "Love",
+      "duration": "6m"
+    },
+    {
+      "story_id": "ST_003",
+      "title": "견우와 직녀",
+      "file_name": "cowherd_and_weaver.json",
+      "_thumbnail_comment": "이미지 경로 준비 중",
+      "theme": "Love",
+      "duration": "4m"
+    },
+    {
+      "story_id": "ST_004",
+      "title": "금도끼 은도끼",
+      "file_name": "gold_axe_silver_axe.json",
+      "_thumbnail_comment": "이미지 경로 준비 중",
+      "theme": "Honesty",
+      "duration": "3m"
+    },
+    {
+      "story_id": "ST_005",
+      "title": "토끼와 자라",
+      "file_name": "rabbit_and_turtle.json",
+      "_thumbnail_comment": "이미지 경로 준비 중",
+      "theme": "Wisdom",
+      "duration": "5m"
+    }
+  ]
+}
