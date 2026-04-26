@@ -1,0 +1,31 @@
+.emotion-card {
+  padding: 22px;
+  border-radius: 24px;
+  background: #fff3e6;
+  border: 2px solid #f0d4b6;
+}
+
+.emotion-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 22px;
+}
+
+.emotion-header strong {
+  color: #c65f48;
+}
+
+.emotion-bar-background {
+  height: 22px;
+  border-radius: 999px;
+  background: #e6d6c4;
+  overflow: hidden;
+}
+
+.emotion-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #c65f48;
+  transition: width 0.3s ease;
+}
