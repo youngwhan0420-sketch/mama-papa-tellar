@@ -1,3 +1,5 @@
+#기존 elevenlabs.py 파일명은 충돌에러로 인해 임의로 바꿨습니다. 
+
 from elevenlabs.client import ElevenLabs
 from dotenv import load_dotenv
 import os
@@ -8,6 +10,10 @@ load_dotenv(os.path.join(ROOT_DIR, '.env'))
 
 api_key = os.getenv("ELEVENLABS_API_KEY")
 voice_id_mom = os.getenv("VOICE_ID_MOM")
+
+# 확인용
+print("ROOT_DIR:", ROOT_DIR)
+print("API_KEY:", api_key)
 
 # 클라이언트 생성
 client = ElevenLabs(api_key=api_key)
