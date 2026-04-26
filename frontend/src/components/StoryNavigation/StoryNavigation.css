@@ -1,0 +1,21 @@
+.navigation-buttons {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-button {
+  flex: 1;
+  padding: 24px;
+  border: none;
+  border-radius: 22px;
+  background: #7a5034;
+  color: white;
+  font-size: 24px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.nav-button:disabled {
+  background: #c9b9a8;
+  cursor: not-allowed;
+}

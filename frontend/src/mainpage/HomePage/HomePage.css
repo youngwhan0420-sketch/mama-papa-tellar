@@ -1,0 +1,62 @@
+.voice-section {
+  min-height: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.service-label {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #a26d3d;
+  letter-spacing: 1.8px;
+}
+
+.voice-section h1 {
+  margin: 0;
+  font-size: 52px;
+  color: #3a2a23;
+}
+
+.main-description {
+  max-width: 620px;
+  margin: 20px 0 36px;
+  font-size: 22px;
+  line-height: 1.6;
+  color: #6a5b51;
+}
+
+.situation-input {
+  width: 100%;
+  max-width: 680px;
+  min-height: 120px;
+  margin-top: 36px;
+  padding: 20px;
+  border: 2px solid #e0cdb8;
+  border-radius: 22px;
+  background: white;
+  font-size: 20px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+}
+
+.situation-input:focus {
+  border-color: #a26d3d;
+}
+
+.create-button {
+  width: 100%;
+  max-width: 680px;
+  margin-top: 20px;
+  padding: 22px;
+  border: none;
+  border-radius: 22px;
+  background: #3f6f58;
+  color: white;
+  font-size: 24px;
+  font-weight: 800;
+  cursor: pointer;
+}
