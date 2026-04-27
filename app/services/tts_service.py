@@ -11,10 +11,6 @@ load_dotenv(os.path.join(ROOT_DIR, '.env'))
 api_key = os.getenv("ELEVENLABS_API_KEY")
 voice_id_mom = os.getenv("VOICE_ID_MOM")
 
-# 확인용
-print("ROOT_DIR:", ROOT_DIR)
-print("API_KEY:", api_key)
-
 # 클라이언트 생성
 client = ElevenLabs(api_key=api_key)
 
@@ -23,6 +19,10 @@ voices = client.voices.get_all()
 for v in voices.voices:
     if v.category == "cloned":
         print(v.name, v.voice_id)
+
+# output 폴더 생성 (없으면 자동 생성)
+OUTPUT_DIR = os.path.join(ROOT_DIR, "output")
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # 감정별 파라미터 설정
 emotion_settings = {
@@ -47,7 +47,7 @@ def generate_voice(text, emotion="평온"):
         }
     )
 
-    filename = f"파일명_{emotion}.mp3"
+    filename = os.path.join(OUTPUT_DIR, f"파일명_{emotion}.mp3")
     with open(filename, "wb") as f:
         for chunk in audio:
             f.write(chunk)
