@@ -1,7 +1,7 @@
 """
 데이터 정제 및 오디오 인터페이스
 
-설치: pip install gtts playsound==1.2.2
+설치: pip install playsound==1.2.2
 
 실행: python app/api/stream_JMS.py
 """
@@ -9,7 +9,6 @@
 import json
 import re
 import time
-import tempfile
 import os
 from pathlib import Path
 
@@ -48,8 +47,15 @@ def load_story(filename):
 
 # 텍스트 정제
 def clean_text(text):
+    # 특수문자 → TTS 친화적 기호로 변환
     text = text.replace("…", ".").replace("—", ",")
     text = text.replace("!", ". ").replace("?", ". ")
+    # 숫자와 한글 사이 공백 확보 (예: "3명" → "3 명")
+    text = re.sub(r"(\d)([가-힣])", r"\1 \2", text)
+    text = re.sub(r"([가-힣])(\d)", r"\1 \2", text)
+    # 연속 마침표 정리 (예: "..." → ".")
+    text = re.sub(r"\.{2,}", ".", text)
+    # 연속 공백 제거
     text = re.sub(r" {2,}", " ", text)
     return text.strip()
 
@@ -98,7 +104,12 @@ def print_story_list():
 
 # 전체 동화 실행
 def run_story(filename):
-    story  = load_story(filename)
+    try:
+        story = load_story(filename)
+    except FileNotFoundError:
+        print(f"동화 파일을 찾을 수 없습니다: {filename}")
+        return
+
     title  = story["story_title"]
     scenes = story["scenes"]
 
