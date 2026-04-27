@@ -5,6 +5,7 @@ import numpy as np
 import json
 import os
 import re
+from services.tts_service import generate_voice
 
 def clean_tts_text(text):
     return re.sub(r"""['"`‘’“”]""", "", text)
@@ -35,11 +36,11 @@ def play_audio_sd(audio):
     sd.play(samples, samplerate=audio.frame_rate)
     sd.wait()
 
-def text_to_audio(text, pitch="normal", speed=1.0):
+def text_to_audio(text, pitch="normal", speed=1.0, emotion="평온"):
     text = clean_tts_text(text)
 
-    gTTS(text=text, lang='ko').save("temp.mp3")
-    audio = AudioSegment.from_mp3("temp.mp3")
+    generate_voice(text, emotion=emotion)
+    audio = AudioSegment.from_mp3(f"파일명_{emotion}.mp3")
     audio = apply_pitch(audio, pitch)
     audio = apply_speed(audio, speed)
     return audio
