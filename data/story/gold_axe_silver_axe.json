@@ -22,7 +22,7 @@
       "id": 3,
       "type": "narration",
       "speaker": "narrator",
-      "text": "(EMO:happy) 정직한 나무꾼은 모든 도끼를 선물로 받고 큰 부자가 되었어요. 나무꾼은 평생 이웃을 도우며 정직하고 착하게 살았답니다.",
+      "text": "(EMO:happy) 정직한 나무꾼은 모든 도끼를 선물로 받고 큰 부자가 되었어요, 나무꾼은 평생 이웃을 도우며 정직하고 착하게 살았답니다.",
       "emotion_map": { "happy": { "stability": 0.8, "style_exaggeration": 0.4, "speed": 1.0, "pitch": 1 } }
     }
   ]

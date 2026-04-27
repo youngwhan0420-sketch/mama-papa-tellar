@@ -22,7 +22,7 @@
       "id": 3,
       "type": "narration",
       "speaker": "narrator",
-      "text": "(EMO:happy) 하늘에서 내려온 동아줄을 타고 오누이는 각각 해와 달이 되었어요. 오누이는 하늘에서 세상을 환하게 비추며 오래오래 행복하게 살았답니다.",
+      "text": "(EMO:happy) 하늘에서 내려온 동아줄을 타고 오누이는 각각 해와 달이 되었어요, 오누이는 하늘에서 세상을 환하게 비추며 오래오래 행복하게 살았답니다.",
       "emotion_map": { "happy": { "stability": 0.7, "style_exaggeration": 0.5, "speed": 1.0, "pitch": 1 } }
     }
   ]

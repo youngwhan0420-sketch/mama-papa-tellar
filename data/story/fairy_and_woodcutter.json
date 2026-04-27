@@ -22,7 +22,7 @@
       "id": 3,
       "type": "narration",
       "speaker": "narrator",
-      "text": "(EMO:pity) 선녀를 떠나보낸 나무꾼은 하늘만 바라보며 매일 눈물을 흘렸어요. 나무꾼은 결국 수탉이 되어 지붕 위에서 슬프게 울었다는 전설이 전해 내려오고 있답니다.",
+      "text": "(EMO:pity) 선녀를 떠나보낸 나무꾼은 하늘만 바라보며 매일 눈물을 흘렸어요, 나무꾼은 결국 수탉이 되어 지붕 위에서 슬프게 울었다는 전설이 전해 내려오고 있답니다.",
       "emotion_map": { "pity": { "stability": 0.7, "style_exaggeration": 0.5, "speed": 0.8 } }
     }
   ]

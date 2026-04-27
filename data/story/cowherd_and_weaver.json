@@ -22,7 +22,7 @@
       "id": 3,
       "type": "narration",
       "speaker": "narrator",
-      "text": "(EMO:warm) 새들이 만든 다리 위에서 두 사람은 눈물의 재회를 했어요. 칠월 칠석에 내리는 비는 그들이 기뻐서 흘리는 눈물이라는 이야기가 지금까지 전해 내려오고 있답니다.",
+      "text": "(EMO:warm) 새들이 만든 다리 위에서 두 사람은 눈물의 재회를 했어요, 칠월 칠석에 내리는 비는 그들이 기뻐서 흘리는 눈물이라는 이야기가 지금까지 전해 내려오고 있답니다.",
       "emotion_map": { "warm": { "stability": 0.8, "style_exaggeration": 0.3, "speed": 0.9 } }
     }
   ]

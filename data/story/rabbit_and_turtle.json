@@ -22,7 +22,7 @@
       "id": 3,
       "type": "narration",
       "speaker": "narrator",
-      "text": "(EMO:joyful) 육지에 닿자마자 토끼는 산속으로 도망쳤어요. 위기의 순간에도 침착하게 지혜를 짜낸 토끼는 숲속에서 오래오래 평화롭게 살았답니다.",
+      "text": "(EMO:joyful) 육지에 닿자마자 토끼는 산속으로 도망쳤어요, 위기의 순간에도 침착하게 지혜를 짜낸 토끼는 숲속에서 오래오래 평화롭게 살았답니다.",
       "emotion_map": { "joyful": { "stability": 0.8, "style_exaggeration": 0.4, "speed": 1.1 } }
     }
   ]
