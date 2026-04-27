@@ -1,62 +1,203 @@
-.voice-section {
-  min-height: 620px;
+/* 전역 설정: 아이들의 눈이 편안한 미색 배경 */
+.tablet-page {
+  background-color: #fcf9f5;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+  margin: 0;
+  font-family: 'Pretendard', sans-serif;
+}
+
+
+/* 헤더 영역 */
+.header-section {
   text-align: center;
+  margin-bottom: 40px;
 }
 
 .service-label {
-  margin: 0 0 12px;
   font-size: 14px;
   font-weight: 800;
   color: #a26d3d;
-  letter-spacing: 1.8px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
 }
 
-.voice-section h1 {
-  margin: 0;
-  font-size: 52px;
+.main-title {
+  font-size: 32px;
+  line-height: 1.3;
   color: #3a2a23;
+  margin: 0;
+  word-break: keep-all;
 }
 
-.main-description {
-  max-width: 620px;
-  margin: 20px 0 36px;
-  font-size: 22px;
-  line-height: 1.6;
-  color: #6a5b51;
+/* 수정된 동화 리스트 섹션 */
+.story-list-section {
+  /* 아이들이 한눈에 볼 수 있도록 적절한 높이를 확보해요 */
+  min-height: calc((40vw + 60px) * 2 + 20px);
+  /* (이미지 높이 + 텍스트 영역) * 2개 행 + 간격 */
+  display: flex;
+  flex-direction: column;
 }
 
-.situation-input {
+/* 동화 그리드: 한 줄에 2개씩 */
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* 4개가 채워지지 않아도 항상 2행의 공간을 확보합니다 */
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
+  align-content: start;
+  /* 콘텐츠가 위쪽부터 채워지도록 설정 */
+}
+
+.story-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.story-card:active {
+  transform: scale(0.95);
+  /* 터치 시 눌리는 효과 */
+}
+
+/* 이미지 컨테이너: 정사각형 유지 및 이미지 깨짐 방지 */
+.image-container {
+  position: relative;
+  max-width: 40vw;
+  max-height: 40vw;
   width: 100%;
-  max-width: 680px;
-  min-height: 120px;
-  margin-top: 36px;
-  padding: 20px;
-  border: 2px solid #e0cdb8;
-  border-radius: 22px;
-  background: white;
-  font-size: 20px;
-  line-height: 1.5;
-  resize: none;
-  outline: none;
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(58, 42, 35, 0.1);
+  background-color: #f0f0f0;
 }
 
-.situation-input:focus {
+.story-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* 이미지가 찌그러지지 않게 꽉 채움 */
+  display: block;
+}
+
+/* 잠금 상태 스타일 */
+.locked .story-image {
+  filter: grayscale(100%) opacity(0.6);
+}
+
+.lock-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  background: rgba(255, 255, 255, 0.8);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* 동화 정보 텍스트 */
+.story-info {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.story-info h3 {
+  font-size: 17px;
+  margin: 0 0 4px;
+  color: #3a2a23;
+  font-weight: 700;
+}
+
+.duration-tag {
+  font-size: 13px;
+  color: #a26d3d;
+  background: #fdf2e9;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+/* 하단 고정 마이크 버튼 */
+.fixed-mic-container {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100;
+}
+
+.mic-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #3a2a23;
+  margin-bottom: 8px;
+  background: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 페이지네이션 컨테이너: 중앙 정렬 및 여백 */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+  padding-bottom: 5px;
+}
+
+/* 동글동글한 이전/다음 버튼 */
+.pag-btn {
+  background-color: #ffffff;
+  border: 2px solid #f0e2d3;
+  color: #a26d3d;
+  padding: 10px 20px;
+  border-radius: 30px;
+  /* 아주 동글동글하게 */
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(162, 109, 61, 0.1);
+  font-family: 'Pretendard', sans-serif;
+}
+
+/* 버튼에 마우스를 올리거나 터치했을 때 */
+.pag-btn:not(:disabled):active {
+  transform: scale(0.92);
+  background-color: #fdf2e9;
   border-color: #a26d3d;
 }
 
-.create-button {
-  width: 100%;
-  max-width: 680px;
-  margin-top: 20px;
-  padding: 22px;
-  border: none;
-  border-radius: 22px;
-  background: #3f6f58;
-  color: white;
-  font-size: 24px;
-  font-weight: 800;
-  cursor: pointer;
+/* 비활성화된 버튼 (첫 페이지나 마지막 페이지) */
+.pag-btn:disabled {
+  background-color: #f5f5f5;
+  border-color: #e0e0e0;
+  color: #bdbdbd;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 페이지 표시기 (1 / 5) */
+.page-indicator {
+  font-weight: 600;
+  color: #3a2a23;
+  background: #fff;
+  padding: 6px 14px;
+  border-radius: 15px;
+  border: 1px dashed #d1b8a0;
+  /* 부드러운 절취선 느낌 */
 }

@@ -1,6 +1,6 @@
 .tablet-page {
   min-height: 100vh;
-  padding: 32px;
+  padding: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,9 +10,8 @@
 .tablet-frame {
   width: 100%;
   max-width: 900px;
-  min-height: 720px;
   background: #fffaf3;
   border-radius: 36px;
-  padding: 44px;
+  padding: 16px;
   box-shadow: 0 20px 60px rgba(60, 40, 20, 0.18);
 }

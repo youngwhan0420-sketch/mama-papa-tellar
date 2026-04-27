@@ -1,6 +1,6 @@
 .mic-button {
-  width: 230px;
-  height: 230px;
+  width: 40px;
+  height: 40px;
   border: none;
   border-radius: 50%;
   background: #7a5034;
@@ -9,39 +9,40 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 14px;
   cursor: pointer;
-  box-shadow: 0 14px 32px rgba(122, 80, 52, 0.35);
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
+  box-shadow: 0 8px 20px rgba(122, 80, 52, 0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
+  position: relative;
 }
 
 .mic-button:hover {
-  transform: scale(1.04);
+  transform: scale(1.08);
+}
+
+.mic-button:active {
+  transform: scale(0.95);
 }
 
 .mic-button.listening {
   background: #c65f48;
-  animation: pulse 1.2s infinite;
+  animation: pulse 1.5s infinite;
 }
 
 .mic-icon {
-  font-size: 64px;
+  font-size: 16px;
 }
 
 .mic-text {
-  font-size: 22px;
-  font-weight: 800;
+  display: none;
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(198, 95, 72, 0.45);
+    box-shadow: 0 0 0 0 rgba(198, 95, 72, 0.6);
   }
 
   70% {
-    box-shadow: 0 0 0 28px rgba(198, 95, 72, 0);
+    box-shadow: 0 0 0 15px rgba(198, 95, 72, 0);
   }
 
   100% {
