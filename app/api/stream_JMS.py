@@ -50,6 +50,7 @@ def load_story(filename):
 # 텍스트 정제
 def clean_text(text):
     text = text.replace("…", ".").replace("—", ",")
+    text = text.replace("!", ".").replace("?", ".")
     text = re.sub(r" {2,}", " ", text)
     return text.strip()
 
