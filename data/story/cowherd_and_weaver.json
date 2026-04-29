@@ -8,6 +8,6 @@
     { "id": 5, "type": "narration", "speaker": "narrator", "text": "이 안타까운 사연을 들은 전국의 까치와 까마귀들이 하늘로 날아올라 머리를 맞대고 오작교를 만들어 주었답니다.", "emotion": "warm" },
     { "id": 6, "type": "dialogue", "speaker": "lover", "text": "드디어 다리가 생겼군요! 당신, 정말 보고 싶었소! 우리가 드디어 만나는구려!", "emotion": "joyful" },
     { "id": 7, "type": "dialogue", "speaker": "lover", "text": "까치들아, 정말 고맙다. 너희들 덕분에 이토록 꿈에 그리던 아내를 품에 안아보는구나.", "emotion": "joyful" },
-    { "id": 8, "type": "narration", "speaker": "narrator", "text": "두 사람은, 짧은 만남을 뒤로하고 다시 헤어지며 눈물을 흘렸고, 그 눈물이 비가 되어 땅으로 내렸답니다.", "emotion": "warm" }
+    { "id": 8, "type": "narration", "speaker": "narrator", "text": "두 사람은 짧은 만남을 뒤로하고 다시 헤어지며 눈물을 흘렸고, 그 눈물이 비가 되어 땅으로 내렸답니다.", "emotion": "warm" }
   ]
 }

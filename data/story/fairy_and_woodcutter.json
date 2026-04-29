@@ -9,6 +9,6 @@
     { "id": 6, "type": "narration", "speaker": "narrator", "text": "갈 곳 없는 선녀는 나무꾼과 결혼해 아이 셋을 낳을 때까지 날개옷을 찾지 못한 채 그리움 속에 살았답니다.", "emotion": "warm" },
     { "id": 7, "type": "dialogue", "speaker": "woodcutter", "text": "부인, 이제 아이도 셋이나 되니 안심하고 고백하겠소. 사실 그날 날개옷을 숨긴 건 나였소. 자, 여기 당신의 옷이라오.", "emotion": "gentle" },
     { "id": 8, "type": "dialogue", "speaker": "fairy", "text": "아! 당신이 어떻게 나에게 이럴 수가 있나요? 그토록 믿었는데... 저는 이제 아이들과 하늘로 돌아가겠어요!", "emotion": "sad" },
-    { "id": 9, "type": "narration", "speaker": "narrator", "text": "선녀는, 배신감과 그리움에 눈물을 흘리며, 양팔에 아이들을 안고 구름 너머 하늘나라로 영영 날아가 버렸답니다.", "emotion": "sad" }
+    { "id": 9, "type": "narration", "speaker": "narrator", "text": "선녀는 배신감과 그리움에 눈물을 흘리며, 양팔에 아이들을 안고 구름 너머 하늘나라로 영영 날아가 버렸답니다.", "emotion": "sad" }
   ]
 }

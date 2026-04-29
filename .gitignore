@@ -209,9 +209,13 @@ __marimo__/
 # Audio files
 *.mp3
 *.wav
+*.m4a
 
 # Output
 output/
 
 # 가상환경
 p1t7/
+
+ # API_BASE_URL
+frontend/src/config/apiConfig.js
