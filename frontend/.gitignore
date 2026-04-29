@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# API_BASE_URL
+frontend/src/config/apiConfig.js
