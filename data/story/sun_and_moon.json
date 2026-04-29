@@ -10,6 +10,6 @@
     { "id": 7, "type": "dialogue", "speaker": "brother", "text": "우리 엄마 목소리가 아니야!", "emotion": "shocked" },
     { "id": 8, "type": "narration", "speaker": "narrator", "text": "오누이는 뒷마당 나무 위로 도망쳤지만, 호랑이는 도끼로 나무를 찍으며 올라왔어요.", "emotion": "scary" },
     { "id": 9, "type": "dialogue", "speaker": "sister", "text": "하느님, 저희를 살리시려면 새 동아줄을 내려주세요!", "emotion": "sad" },
-    { "id": 10, "type": "narration", "speaker": "narrator", "text": "하늘에서 내려온 줄을 타고 오누이는 해와 달이 되었고, 썩은 줄을 잡은 호랑이는 수수밭으로 떨어졌답니다.", "emotion": "happy" }
+    { "id": 10, "type": "narration", "speaker": "narrator", "text": "하늘에서, 내려온 줄을 타고 오누이는 해와 달이 되었고, 썩은 줄을 잡은 호랑이는 수수밭으로 떨어졌답니다.", "emotion": "happy" }
   ]
 }

@@ -9,6 +9,6 @@
     { "id": 6, "type": "dialogue", "speaker": "king", "text": "뭐라? 간을 육지에 두고 왔다고? 허허, 참으로 신기한 일이로다. 어서 가서 다시 가져오너라!", "emotion": "gentle" },
     { "id": 7, "type": "narration", "speaker": "narrator", "text": "자라의 등에 타고 육지에 닿자마자 토끼는 껑충 뛰어 숲으로 달아나며 자라를 비웃었답니다.", "emotion": "warm" },
     { "id": 8, "type": "dialogue", "speaker": "rabbit", "text": "하하하! 이 멍청한 자라야! 세상에 간을 빼놓고 다니는 동물이 어디 있느냐! 덕분에 구경 잘 했다!", "emotion": "joyful" },
-    { "id": 9, "type": "narration", "speaker": "narrator", "text": "토끼는 지혜로운 꾀로 목숨을 구했고, 자라는 자신의 어리석음을 탓하며 빈손으로 용궁으로 돌아갔답니다.", "emotion": "warm" }
+    { "id": 9, "type": "narration", "speaker": "narrator", "text": "토끼는, 지혜로운 꾀로 목숨을 구했고, 자라는 자신의 어리석음을 탓하며 빈손으로 용궁으로 돌아갔답니다.", "emotion": "warm" }
   ]
 }
