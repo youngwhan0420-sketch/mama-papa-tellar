@@ -101,14 +101,33 @@ def get_voice_settings(emotion: str, speaker: str) -> dict:
 
 # ── 구두점 전처리 ──────────────────────────────────────────
 def preprocess_text(text: str) -> str:
-    text = re.sub(r'!', '! ',        text)
-    text = re.sub(r'\?', '? ',       text)
-    text = re.sub(r',', ',  ',       text)
+    text = text.replace("…", "...").replace("—", ", ")
+
+    text = re.sub(r"!", "! ", text)
+    text = re.sub(r"\?", "? ", text)
+    text = re.sub(r",", ",  ", text)
+
     text = re.sub(r"(\d)([가-힣])", r"\1 \2", text)
     text = re.sub(r"([가-힣])(\d)", r"\1 \2", text)
-    text = re.sub(r'[…]|\.{3}', '... ', text)
-    text = re.sub(r' {2,}', ' ', text).strip()
+
+    text = re.sub(r"\.\s+\.\s+\.", "...", text)
+    text = re.sub(r" {3,}", "  ", text).strip()
+
     return text
+
+def get_pause_duration(speaker: str, text: str) -> int:
+    pause_duration = SPEAKER_PAUSE.get(speaker, SPEAKER_PAUSE["narrator"])
+
+    if "..." in text or "…" in text:
+        pause_duration += 700
+
+    if "!" in text:
+        pause_duration += 350
+
+    if "?" in text:
+        pause_duration += 350
+
+    return pause_duration
 
 @router.get("/play/{story_id}") 
 async def stream_story_audio(
@@ -162,14 +181,14 @@ async def stream_story_audio(
                     voice_id=voice_id,
                     emotion=scene_emotion,
                     voice_settings=voice_settings,
-                    )
+                )
 
                 scene_audio = AudioSegment.from_file(temp_path)
 
                 combined_audio += scene_audio
                 current_time_ms += len(scene_audio)
 
-                pause_duration = SPEAKER_PAUSE.get(speaker, SPEAKER_PAUSE["narrator"])
+                pause_duration =  get_pause_duration(speaker, text)
                 combined_audio += AudioSegment.silent(duration=pause_duration)
                 current_time_ms += pause_duration
 

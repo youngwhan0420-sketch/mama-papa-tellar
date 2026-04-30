@@ -23,9 +23,9 @@ EMOTION_SETTINGS = {
     "greedy":  {"stability": 0.30, "similarity_boost": 0.80, "style": 0.75}
 }
 
-def generate_parent_speech(text, voice_id, emotion="평온",voice_settings=None):
+def generate_parent_speech(text, voice_id, emotion="calm",voice_settings=None):
     """프론트에서 넘겨받은 voice_id를 사용하여 맞춤형 음성을 생성합니다."""
-    settings = EMOTION_SETTINGS.get(emotion, EMOTION_SETTINGS["calm"])
+    settings = voice_settings or EMOTION_SETTINGS.get(emotion, EMOTION_SETTINGS["calm"])
     
     audio_generator = client.text_to_speech.convert(
         voice_id=voice_id,  # 이제 고정값이 아닌 인자로 받은 ID 사용
@@ -35,6 +35,7 @@ def generate_parent_speech(text, voice_id, emotion="평온",voice_settings=None)
             "stability": settings["stability"],
             "similarity_boost": settings["similarity_boost"],
             "style": settings["style"],
+            "speed": settings.get("speed", 0.92),
             "use_speaker_boost": True
         }
     )
