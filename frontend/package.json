@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "and": "npm run build && npx cap copy && npx cap sync android && npx cap open android",
-    "and:win": "npm run build && npx cap copy && rsync -av --delete android/ /mnt/d/MamaPapaProject/mama-papa-tellar/frontend/android/"
+    "and": "npm run build && npx cap copy android && npx cap sync android && npx cap open android",
+    "and:win": "npm run build && npx cap copy android && npx cap sync android && rsync -av --delete android/ /mnt/d/MamaPapaProject/mama-papa-tellar/frontend/android/"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.1",
