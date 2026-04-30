@@ -172,7 +172,7 @@ function StoryViewerPage() {
   };
 
   const handleGoHome = () => {
-    navigate("/");
+    navigate("/pages/StoryListViewPage");
   };
 
   const togglePlay = () => {
