@@ -1,0 +1,28 @@
+name: Sync to Hugging Face Space
+on:
+  push:
+    branches: [main]
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1 # 과거의 무거운 이미지 기록을 가져오지 않습니다.
+      
+      - name: Remove frontend before sync
+        run: rm -rf frontend # 배달하기 직전에 프론트엔드 폴더를 삭제합니다.
+
+      - name: Push to Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+        # 삭제된 상태(백엔드만 남은 상태)로 허깅페이스에 강제 푸시합니다.
+        run: |
+          git config --global user.email "gh-actions@github.com"
+          git config --global user.name "github-actions"
+          # 현재의 백엔드 중심 상태만 새롭게 포장합니다.
+          git checkout --orphan hf-deploy
+          git add .
+          git commit -m "deploy: 백엔드 전용 다정한 동화 공장 배포"
+          git push --force https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/mama-papa-teller hf-deploy:main

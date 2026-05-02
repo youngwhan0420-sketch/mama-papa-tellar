@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "9f40d4b7-9575-4402-a558-3cb0970ee012"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "jdkVersion": 17
+          }
+        }
+      ]
+    ],
+    "android": {
+      "package": "com.eichi2514.frontend"
+    }
+  }
+}
