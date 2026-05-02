@@ -1,0 +1,112 @@
+{
+    "quizzes": [
+        {
+            "id": 1,
+            "answer": "거북이",
+            "imageUrl": "/quiz/turtle.png",
+            "voiceScript": "우와~ 등껍질이 정말 단단해 보여! 느릿느릿 걸어가지만 끝까지 포기하지 않는 이 친구는 누구일까?"
+        },
+        {
+            "id": 2,
+            "answer": "금도끼",
+            "imageUrl": "/quiz/gold_axe.png",
+            "voiceScript": "번쩍번쩍! 연못 속에서 나타난 아주 반짝이는 도끼야. 산신령님이 들고 계신 이건 무엇일까~?"
+        },
+        {
+            "id": 3,
+            "answer": "토끼",
+            "imageUrl": "/quiz/rabbit.png",
+            "voiceScript": "쫑긋쫑긋 긴 귀를 가지고 산속을 폴짝폴짝 뛰어다니는 귀여운 이 친구! 이름이 뭘까?"
+        },
+        {
+            "id": 4,
+            "answer": "해",
+            "imageUrl": "/quiz/sun.png",
+            "voiceScript": "아침이 되면 하늘 높이 떠올라 세상을 환하게 비춰주는 따뜻한 친구야. 정답이 뭔지 맞혀볼까?"
+        },
+        {
+            "id": 5,
+            "answer": "호랑이",
+            "imageUrl": "/quiz/tiger.png",
+            "voiceScript": "어흥~! 무시무시한 소리를 내며 떡 하나 주면 안 잡아먹지~ 라고 말하는 무서운 동물은 누구일까?"
+        },
+        {
+            "id": 6,
+            "answer": "견우",
+            "imageUrl": "/quiz/gyeonwoo.png",
+            "voiceScript": "어머, 소를 아주 정성스럽게 돌보는 이 멋진 청년은 누구일까? 일 년에 딱 한 번, 까치들이 만든 다리 위에서 사랑하는 사람을 만난단다~"
+        },
+        {
+            "id": 7,
+            "answer": "까치",
+            "imageUrl": "/quiz/magpie.png",
+            "voiceScript": "반가운 손님이 오려나? 까악까악~ 예쁜 소리로 노래하며 견우와 직녀가 만날 수 있게 다리를 놓아주는 고마운 새야!"
+        },
+        {
+            "id": 8,
+            "answer": "나무꾼",
+            "imageUrl": "/quiz/woodcutter.png",
+            "voiceScript": "영차, 영차! 산속에서 나무를 하는 착한 아저씨네. 연못에 도끼를 빠뜨렸던 이 아저씨의 이름이 뭐였지~?"
+        },
+        {
+            "id": 9,
+            "answer": "달",
+            "imageUrl": "/quiz/moon.png",
+            "voiceScript": "깜깜한 밤하늘을 은은하게 비춰주는 노란 친구야. 모양이 바뀌기도 하지만 언제나 우리를 지켜준단다. 누구일까?"
+        },
+        {
+            "id": 10,
+            "answer": "사슴",
+            "imageUrl": "/quiz/deer.png",
+            "voiceScript": "다리가 길쭉길쭉~ 눈망울이 정말 초롱초롱하지? 나무꾼 아저씨 뒤에 숨어서 포수로부터 도망쳤던 이 친구는 누구일까?"
+        },
+        {
+            "id": 11,
+            "answer": "산신령",
+            "imageUrl": "/quiz/mountain_spirit.png",
+            "voiceScript": "허허허~ 하얀 수염이 아주 멋지시구나! 연못 속에서 금도끼를 들고 나타나 '이 도끼가 네 도끼냐~?' 하고 물으시는 분은 누구일까?"
+        },
+        {
+            "id": 12,
+            "answer": "선녀",
+            "imageUrl": "/quiz/fairy.png",
+            "voiceScript": "하늘나라에서 구름을 타고 내려온 아름다운 분이야. 날개옷을 입고 다시 하늘로 올라가려던 이분은 누구일까?"
+        },
+        {
+            "id": 13,
+            "answer": "소",
+            "imageUrl": "/quiz/cow.png",
+            "voiceScript": "음메~ 음메~ 덩치는 크지만 아주 순한 친구야. 견우와 함께 열심히 밭을 갈고 도와주는 이 동물은 무엇일까?"
+        },
+        {
+            "id": 14,
+            "answer": "오누이",
+            "imageUrl": "/quiz/siblings.png",
+            "voiceScript": "사이좋은 오빠와 여동생이 동아줄을 잡고 하늘로 올라가고 있어! 해와 달이 된 이 귀여운 두 사람을 뭐라고 부를까?"
+        },
+        {
+            "id": 15,
+            "answer": "옥황상제",
+            "imageUrl": "/quiz/jade_emperor.png",
+            "voiceScript": "하늘나라의 왕님이야! 아주 위엄 있는 목소리로 세상을 다스리시는 분이지. 이 높은 분의 이름이 뭘까?"
+        },
+        {
+            "id": 16,
+            "answer": "용왕님",
+            "imageUrl": "/quiz/dragon_king.png",
+            "voiceScript": "깊고 깊은 바닷속 궁전에 살고 계시는 분이야. 토끼의 간이 필요하다고 하셨던 바다의 왕님은 누구일까?"
+        },
+        {
+            "id": 17,
+            "answer": "은도끼",
+            "imageUrl": "/quiz/silver_axe.png",
+            "voiceScript": "반짝반짝 은색으로 빛나는 도끼구나! 금도끼는 아니지만, 이것도 아주 귀한 보물이지? 정답이 무엇일까?"
+        },
+        {
+            "id": 18,
+            "answer": "직녀",
+            "imageUrl": "/quiz/jiknyeo.png",
+            "voiceScript": "베틀 앞에 앉아 예쁜 옷감을 짜는 솜씨 좋은 아가씨야. 견우가 너무 보고 싶어 눈물을 흘리기도 했단다. 누구일까?"
+        }
+    ]
+}

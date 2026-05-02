@@ -158,7 +158,7 @@ function FamilyVoicesViewPage() {
 
             <main className="tablet-frame">
                 <header className="header-section">
-                    <p className="service-label">FAMILY VOICES</p>
+                    <p className="service-label">MAMA / PAPA TELLER</p>
                     <h1 className="main-title">우리 가족 목소리함</h1>
                 </header>
 

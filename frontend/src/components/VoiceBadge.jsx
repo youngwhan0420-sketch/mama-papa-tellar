@@ -12,7 +12,11 @@ function VoiceBadge({ onKeyDetected }) {
             if (activeVoiceKey) {
                 const selectedId = localStorage.getItem(activeVoiceKey);
                 if (selectedId) {
-                    setDisplayVoiceId(selectedId);
+                    // setDisplayVoiceId(selectedId);
+                    const cleanName = activeVoiceKey
+                        .replace("mpt_", "")
+                        .replace("_voice_id", "");
+                    setDisplayVoiceId(cleanName);
                     if (onKeyDetected) onKeyDetected(activeVoiceKey);
                 }
             } else {
