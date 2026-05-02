@@ -1,341 +1,69 @@
-/* 전역 설정: 아이들의 눈이 편안한 미색 배경 */
-.tablet-page {
-  background-color: #fcf9f5;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0;
-  margin: 0;
-  font-family: 'Pretendard', sans-serif;
-}
-
-
-/* 헤더 영역 */
-.header-section {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.service-label {
-  font-size: 14px;
-  font-weight: 800;
-  color: #a26d3d;
-  letter-spacing: 2px;
-  margin-bottom: 8px;
-}
-
-.main-title {
-  font-size: 32px;
-  line-height: 1.3;
-  color: #3a2a23;
-  margin: 0;
-  word-break: keep-all;
-}
-
-/* 수정된 동화 리스트 섹션 */
-.story-list-section {
-  /* 아이들이 한눈에 볼 수 있도록 적절한 높이를 확보해요 */
-  min-height: calc((40vw + 60px) * 2 + 20px);
-  /* (이미지 높이 + 텍스트 영역) * 2개 행 + 간격 */
-  display: flex;
-  flex-direction: column;
-}
-
-/* 동화 그리드: 한 줄에 2개씩 */
-.story-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  /* 4개가 채워지지 않아도 항상 2행의 공간을 확보합니다 */
-  grid-template-rows: repeat(2, auto);
-  gap: 20px;
-  align-content: start;
-  /* 콘텐츠가 위쪽부터 채워지도록 설정 */
-}
-
-.story-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s ease;
-}
-
-.story-card:active {
-  transform: scale(0.95);
-  /* 터치 시 눌리는 효과 */
-}
-
-/* 이미지 컨테이너: 정사각형 유지 및 이미지 깨짐 방지 */
-.image-container {
-  position: relative;
-  max-width: 40vw;
-  max-height: 40vw;
+/* 이동 버튼 중심의 메인 컨테이너 */
+.home-container {
   width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 8px 16px rgba(58, 42, 35, 0.1);
-  background-color: #f0f0f0;
-}
-
-.story-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* 이미지가 찌그러지지 않게 꽉 채움 */
-  display: block;
-}
-
-/* 잠금 상태 스타일 */
-.locked .story-image {
-  filter: grayscale(100%) opacity(0.6);
-}
-
-.lock-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 32px;
-  background: rgba(255, 255, 255, 0.8);
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-/* 동화 정보 텍스트 */
-.story-info {
-  margin-top: 12px;
-  text-align: center;
-}
-
-.story-info h3 {
-  font-size: 17px;
-  margin: 0 0 4px;
-  color: #3a2a23;
-  font-weight: 700;
-}
-
-.duration-tag {
-  font-size: 13px;
-  color: #a26d3d;
-  background: #fdf2e9;
-  padding: 2px 8px;
-  border-radius: 8px;
-}
-
-/* 하단 고정 마이크 버튼 */
-.fixed-mic-container {
-  position: fixed;
-  top: 8px;
-  right: 8px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 100px 24px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 100;
 }
 
-.mic-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #3a2a23;
-  margin-bottom: 8px;
-  background: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* 페이지네이션 컨테이너: 중앙 정렬 및 여백 */
-.pagination-container {
+/* 메뉴 그리드 */
+.menu-grid {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   gap: 16px;
-  margin-top: 10px;
-  padding-bottom: 5px;
-}
-
-/* 동글동글한 이전/다음 버튼 */
-.pag-btn {
-  background-color: #ffffff;
-  border: 2px solid #f0e2d3;
-  color: #a26d3d;
-  padding: 10px 20px;
-  border-radius: 30px;
-  /* 아주 동글동글하게 */
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(162, 109, 61, 0.1);
-  font-family: 'Pretendard', sans-serif;
-}
-
-/* 버튼에 마우스를 올리거나 터치했을 때 */
-.pag-btn:not(:disabled):active {
-  transform: scale(0.92);
-  background-color: #fdf2e9;
-  border-color: #a26d3d;
-}
-
-/* 비활성화된 버튼 (첫 페이지나 마지막 페이지) */
-.pag-btn:disabled {
-  background-color: #f5f5f5;
-  border-color: #e0e0e0;
-  color: #bdbdbd;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* 페이지 표시기 (1 / 5) */
-.page-indicator {
-  font-weight: 600;
-  color: #3a2a23;
-  background: #fff;
-  padding: 6px 14px;
-  border-radius: 15px;
-  border: 1px dashed #d1b8a0;
-  /* 부드러운 절취선 느낌 */
-}
-
-/* 스크립트 가이드 카드 스타일 */
-.registration-guide {
-  position: fixed;
-  /* absolute 대신 fixed를 사용하여 브라우저 화면 전체를 기준으로 잡습니다 */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-
-  /* 배경을 반투명하게 만들고 뒤를 흐리게(블러) 처리합니다 */
-  background-color: rgba(252, 249, 245, 0.85);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  /* 사파리 호환성 */
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* 카드를 화면 정중앙에 배치 */
-  align-items: center;
-  z-index: 50;
-  /* 마이크 버튼보다는 아래에 위치하게 */
-
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-/* 스크립트 카드는 그대로 유지! */
-.script-card {
   width: 100%;
-  max-width: 360px;
+  margin-top: 20px;
+}
+
+/* 메뉴 카드 (이동 버튼) */
+.menu-card {
   background: #ffffff;
   border-radius: 24px;
-  padding: 30px 20px;
-  box-shadow: 0 16px 32px rgba(162, 109, 61, 0.15);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  border: 2px solid #fdf2e9;
-  text-align: center;
-}
-
-.script-card:active {
-  transform: scale(0.98);
-  /* 터치 시 부드럽게 눌리는 느낌 */
-  background: #fcf9f5;
-}
-
-.emotion-tag {
-  font-size: 0.85em;
-  color: #ff8c00;
-  font-weight: bold;
-  background-color: #fff3e0;
-  padding: 4px 10px;
-  border-radius: 12px;
-  display: inline-block;
-  margin-bottom: 12px;
-}
-
-/* 모바일 최적화 CSS */
-.mobile-script-display {
-  min-height: 180px;
-  /* 텍스트 길이에 따라 화면이 덜컹거리지 않도록 최소 높이 지정 */
+  padding: 20px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 8px 16px rgba(162, 109, 61, 0.08);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* 터치/클릭 피드백 (기존 스타일 준수) */
+.menu-card:active {
+  transform: scale(0.96);
+  background-color: #fdf2e9;
+  border-color: #f0e2d3;
+}
+
+.menu-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  background: #fcf9f5;
+  border-radius: 18px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  margin: 20px 0;
+  font-size: 28px;
 }
 
-.voice-script-large {
-  font-size: 1.2rem;
-  /* 모바일에서 읽기 편한 큰 글씨 */
-  line-height: 1.5;
-  word-break: keep-all;
-  /* 단어 단위로 줄바꿈되어 읽기 편하게 */
+.menu-info {
+  text-align: left;
 }
 
-.tap-guide {
-  font-size: 0.9rem;
-  color: #888;
-  animation: pulse 2s infinite;
-  /* 터치 유도를 위한 부드러운 깜빡임 효과 */
+.menu-info h3 {
+  font-size: 19px;
+  margin: 0 0 4px 0;
+  color: #3a2a23;
+  font-weight: 800;
 }
 
-/* 최상단 최좌측 뱃지 스타일 */
-.top-left-voice-badge {
-  position: absolute;
-  top: 20px;
-  /* 상단 여백 */
-  left: 20px;
-  /* 좌측 여백 */
-  z-index: 100;
-  /* 다른 요소보다 위에 보이게 */
-
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background-color: rgba(232, 245, 233, 0.8);
-  /* 살짝 투명하게 해서 고급스럽게 */
-  border-radius: 30px;
-  border: 1px solid #c8e6c9;
-  backdrop-filter: blur(4px);
-  /* 뒷배경을 살짝 흐리게 (트렌디한 효과) */
-}
-
-.badge-text {
-  font-size: 0.75rem;
-  color: #2e7d32;
-  font-weight: 600;
-  max-width: 120px;
-  /* ID가 너무 길면 줄바꿈 방지 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dot-icon {
-  font-size: 0.6rem;
-  color: #4caf50;
-  animation: blink 2s infinite;
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.4;
-  }
-
-  100% {
-    opacity: 1;
-  }
+.menu-info p {
+  font-size: 14px;
+  margin: 0;
+  color: #a26d3d;
+  line-height: 1.4;
 }
