@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import stories, voice_qwen, stream_JMS
+from app.api import stories, voice_qwen, stream_JMS, quizzes
 
 app = FastAPI(title="마마/파파 텔러 API")
 
@@ -15,6 +15,7 @@ app.add_middleware(
 app.include_router(stories.router)
 app.include_router(voice_qwen.router)
 app.include_router(stream_JMS.router)
+app.include_router(quizzes.router)
 
 @app.get("/")
 async def root():
