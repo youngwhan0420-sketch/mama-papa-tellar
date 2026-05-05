@@ -338,3 +338,19 @@
         opacity: 1;
     }
 }
+
+.story-search-link {
+    display: block;
+    margin: -22px auto 22px;
+    padding: 10px 18px;
+
+    border: none;
+    border-radius: 20px;
+    background: #ffffff;
+    color: #a26d3d;
+
+    font-weight: 700;
+    font-family: 'Pretendard', sans-serif;
+    box-shadow: 0 4px 10px rgba(80, 55, 25, 0.15);
+    cursor: pointer;
+}

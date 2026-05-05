@@ -128,3 +128,69 @@
 .home-btn:active {
   transform: scale(0.95);
 }
+
+.playback-rate-card {
+  margin: 12px auto 14px;
+  padding: 12px 14px;
+  width: min(280px, 100%);
+
+  border-radius: 22px;
+  background: #fffaf5;
+  border: 2px solid #f0e2d3;
+  box-shadow: 0 8px 18px rgba(80, 55, 25, 0.12);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.playback-rate-title {
+  color: #8d6038;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.playback-rate-options {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.playback-rate-option {
+  flex: 1;
+  min-height: 38px;
+
+  border: none;
+  border-radius: 16px;
+  background: #c8b8a4;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 800;
+  font-family: 'Pretendard', sans-serif;
+  cursor: pointer;
+
+  box-shadow: 0 4px 8px rgba(80, 55, 25, 0.1);
+}
+
+.playback-rate-option.active {
+  background: #955b32;
+}
+
+.playback-rate-option:active {
+  transform: scale(0.96);
+}
+
+.storybook-section {
+  gap: 6px;
+}
+
+.storybook-header {
+  margin-bottom: 6px;
+}
+
+.loading-container {
+  min-height: 0;
+}
