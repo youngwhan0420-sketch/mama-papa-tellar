@@ -4,7 +4,33 @@ import API_BASE_URL from "../../config/apiConfig";
 import EmotionBar from "../../components/EmotionBar/EmotionBar.jsx";
 import StoryNavigation from "../../components/StoryNavigation/StoryNavigation.jsx";
 import StorySlide from "../../components/StorySlide/StorySlide.jsx";
+import PlaybackRateControl from "../../components/PlaybackRateControl/PlaybackRateControl.jsx";
 import "./StoryViewerPage.css";
+
+// 완청 편수를 localStorage에 1 올려주는 함수
+// 같은 동화를 여러 번 들어도 중복 카운트 안 되도록 storyId로 체크
+function markStoryCompleted(storyId) {
+    const KEY_COUNT   = 'mpt_completed_books';
+    const KEY_RECENT  = 'mpt_recent_stories';
+
+    const recentStories = JSON.parse(localStorage.getItem(KEY_RECENT) || '[]');
+
+    // 최근 목록에서 해당 storyId 찾기
+    const alreadyCompleted = recentStories.some(
+        (s) => s.story_id === storyId && s.completed
+    );
+    if (alreadyCompleted) return;
+
+    // completed 플래그 추가
+    const updated = recentStories.map((s) =>
+        s.story_id === storyId ? { ...s, completed: true } : s
+    );
+    localStorage.setItem(KEY_RECENT, JSON.stringify(updated));
+
+    // 완청 편수 = completed인 항목 수
+    const count = updated.filter((s) => s.completed).length;
+    localStorage.setItem(KEY_COUNT, String(count));
+}
 
 function StoryViewerPage() {
   const { storyId } = useParams();
@@ -17,6 +43,11 @@ function StoryViewerPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
+
+  // 속도 조절
+  const [playbackRate, setPlaybackRate] = useState(
+    () => Number(localStorage.getItem("mpt_playback_rate")) || 1
+  );
 
   // 2. 오디오 제어를 위한 Ref
   const audioRef = useRef(null);
@@ -93,6 +124,8 @@ function StoryViewerPage() {
         const blob = await response.blob();
         const audio = new Audio(URL.createObjectURL(blob));
         audioRef.current = audio;
+        // 속도 조절
+        audio.playbackRate = playbackRate;
 
         // 3. 리스너 등록 (로딩 완료, 재생/일시정지, 시간 업데이트, 종료)
         audio.oncanplaythrough = () => setIsLoading(false);
@@ -101,6 +134,7 @@ function StoryViewerPage() {
         audio.onended = () => {
           setIsPlaying(false);
           setIsFinished(true); // 동화 종료 오버레이 띄우기
+          markStoryCompleted(storyId);
         };
 
         // 📝 클로저(Closure) 이슈를 피하기 위해 함수형 업데이트 사용
@@ -184,6 +218,15 @@ function StoryViewerPage() {
     }
   };
 
+  const handlePlaybackRateChange = (rate) => {
+    setPlaybackRate(rate);
+    localStorage.setItem("mpt_playback_rate", String(rate));
+
+    if (audioRef.current) {
+      audioRef.current.playbackRate = rate;
+    }
+  };
+
   return (
     <div className="tablet-page">
       <main className="tablet-frame">
@@ -232,6 +275,14 @@ function StoryViewerPage() {
             <EmotionBar
               emotion={currentPage.emotion}
               emotionLevel={currentPage.emotionLevel || 3}
+            />
+          )}
+
+          {/* 속도 조절 */}
+          {!isLoading && currentPage && (
+            <PlaybackRateControl
+              playbackRate={playbackRate}
+              onChange={handlePlaybackRateChange}
             />
           )}
 

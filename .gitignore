@@ -215,11 +215,11 @@ __marimo__/
 output/
 
 # 가상환경
+<<<<<<< HEAD
+p1t7/
+=======
 p1t7/
 
-<<<<<<< Updated upstream
- # API_BASE_URL
-=======
 # API_BASE_URL
->>>>>>> Stashed changes
 frontend/src/config/apiConfig.js
+>>>>>>> ae06af8378d84a800677bfac10bbefafe100d5aa
