@@ -96,6 +96,23 @@ function StoryListViewPage() {
         setIsRecording(false);
     };
 
+    // 최근 본 동화 
+    const saveRecentStory = (story) => {
+        const storageKey = "mpt_recent_stories";
+        const savedStories = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+        const nextStories = [
+            {
+                story_id: story.story_id,
+                title: story.title,
+                viewed_at: new Date().toISOString(),
+            },
+            ...savedStories.filter((item) => item.story_id !== story.story_id),
+        ].slice(0, 10);
+
+        localStorage.setItem(storageKey, JSON.stringify(nextStories));
+    };
+
     // 페이지네이션 계산
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -118,6 +135,14 @@ function StoryListViewPage() {
                     <h1 className="main-title">우리 아이 동화 도서관</h1>
                 </header>
 
+                <button
+                    type="button"
+                    className="story-search-link"
+                    onClick={() => navigate("/story/search")}
+                >
+                    🔍 동화 검색
+                </button>
+
                 <section className="story-list-section">
                     <div className="story-grid">
                         {currentStories.map((story) => (
@@ -126,6 +151,8 @@ function StoryListViewPage() {
                                 className={`story-card ${!isVoiceRegistered ? "locked" : ""}`}
                                 onClick={() => {
                                     if (isVoiceRegistered) {
+                                        saveRecentStory(story);
+
                                         navigate(`/story/${story.story_id}`, {
                                             state: {
                                                 voiceId: registeredVoiceId,

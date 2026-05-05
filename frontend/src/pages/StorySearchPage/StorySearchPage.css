@@ -1,0 +1,131 @@
+.search-page {
+    background-color: #fcf9f5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.search-frame {
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+    min-height: 100vh;
+    padding: 70px 28px 40px;
+    background: linear-gradient(180deg, #efe4d2 0%, #fcf9f5 100%);
+    box-sizing: border-box;
+}
+
+.search-back-button {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+
+    background: #ffffff;
+    box-shadow: 0 5px 14px rgba(80, 55, 25, 0.18);
+
+    color: #3a2a23;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.search-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: #a26d3d;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.search-header h1 {
+    font-size: 30px;
+    color: #3a2a23;
+    margin: 0;
+}
+
+.search-box-section {
+    margin-bottom: 28px;
+}
+
+.search-box-section input {
+    width: 100%;
+    height: 48px;
+    border: 2px solid #f0e2d3;
+    border-radius: 24px;
+    padding: 0 18px;
+    box-sizing: border-box;
+
+    background: #ffffff;
+    color: #3a2a23;
+    font-size: 15px;
+    font-family: 'Pretendard', sans-serif;
+    outline: none;
+    box-shadow: 0 6px 14px rgba(80, 55, 25, 0.08);
+}
+
+.search-result-section {
+    display: grid;
+    gap: 18px;
+}
+
+.search-empty {
+    margin-top: 70px;
+    color: #a26d3d;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.search-story-card {
+    width: 100%;
+    background: #fffaf5;
+    border-radius: 28px;
+    padding: 18px;
+    box-shadow: 0 12px 28px rgba(80, 55, 25, 0.14);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease;
+    box-sizing: border-box;
+}
+
+.search-story-card:active {
+    transform: scale(0.97);
+}
+
+.search-story-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 24px;
+    object-fit: cover;
+    display: block;
+}
+
+.search-story-info {
+    margin-top: 14px;
+}
+
+.search-story-info h2 {
+    margin: 0 0 6px;
+    color: #3a2a23;
+    font-size: 22px;
+}
+
+.search-story-info span {
+    color: #a26d3d;
+    background: #fdf2e9;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+}
