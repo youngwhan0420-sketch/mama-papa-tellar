@@ -71,7 +71,8 @@
       "file_name": "kongjwi_and_patjwi.json",
       "image_path": "/illusts/6.png",
       "theme": "Goodness",
-      "duration": "6m"
+      "duration": "6m",
+      "characters": ["콩쥐", "팥쥐", "새어머니"]
     },
     {
       "story_id": "ST_007",
@@ -79,7 +80,8 @@
       "file_name": "heungbu_and_nolbu.json",
       "image_path": "/illusts/7.png",
       "theme": "Brotherhood",
-      "duration": "7m"
+      "duration": "7m",
+      "characters":["흥부", "놀부", "제비"]
     },
     {
       "story_id": "ST_008",
@@ -87,7 +89,8 @@
       "file_name": "old_man_with_lump.json",
       "image_path": "/illusts/8.png",
       "theme": "Humor",
-      "duration": "5m"
+      "duration": "5m",
+      "characters":["영감", "도깨비", "할머니"]
     },
     {
       "story_id": "ST_009",
@@ -95,7 +98,8 @@
       "file_name": "rabbit_and_tiger.json",
       "image_path": "/illusts/9.png",
       "theme": "Wisdom",
-      "duration": "4m"
+      "duration": "4m",
+      "characters": ["토끼", "호랑이"]
     },
     {
       "story_id": "ST_010",
@@ -103,7 +107,8 @@
       "file_name": "farting_daughter_in_law.json",
       "image_path": "/illusts/10.png",
       "theme": "Humor",
-      "duration": "6m"
+      "duration": "6m",
+      "characters":["며느리", "시어머니", "아버지"]
     }
   ]
 }
