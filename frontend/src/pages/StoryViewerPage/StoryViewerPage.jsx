@@ -58,6 +58,8 @@ function StoryViewerPage() {
   const situation = location.state?.situation;
   const narratorVoiceId = location.state?.narratorVoiceId;
   const characterVoiceId = location.state?.characterVoiceId;
+  const childName = location.state?.childName ||"";
+  const useChildProtagonist = location.state?.useChildProtagonist || false;
 
   // 4. 현재 페이지 정보 (서버에서 받은 실제 데이터만 사용!)
   const storyData = dynamicTimeline;
@@ -113,8 +115,8 @@ function StoryViewerPage() {
       try {
         // 1. 서버에서 오디오와 타임라인 한 번에 가져오기
         const streamUrl = (narratorVoiceId && characterVoiceId)
-          ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}`
-          : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}`;
+            ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
+            : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`;
         const response = await fetch(streamUrl);
 
         // 헤더에서 인코딩된 타임라인 추출 및 디코딩

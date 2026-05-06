@@ -30,6 +30,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "용궁에 도착하자 군사들이 토끼를 에워쌌고, 용왕님은 서늘한 목소리로 토끼의 배를 가르라 명하셨어요.",
+      "text_child": "용궁에 도착하자 군사들이 {이름이를} 에워쌌고, 용왕님은 서늘한 목소리로 {이름이의} 배를 가르라 명하셨어요.",
       "emotion": "scary",
       "image": "/story_image/rabbit_and_turtle/rat4.png"
     },
@@ -54,6 +55,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "자라의 등에 타고 육지에 닿자마자 토끼는 껑충 뛰어 숲으로 달아나며 자라를 비웃었답니다.",
+      "text_child": "자라의 등에 타고 육지에 닿자마자 {이름이는} 껑충 뛰어 숲으로 달아나며 자라를 비웃었답니다.",
       "emotion": "warm",
       "image": "/story_image/rabbit_and_turtle/rat7.png"
     },
@@ -70,6 +72,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "토끼는 지혜로운 꾀로 목숨을 구했고, 자라는 자신의 어리석음을 탓하며 빈손으로 용궁으로 돌아갔답니다.",
+      "text_child": "{이름이는} 지혜로운 꾀로 목숨을 구했고, 자라는 자신의 어리석음을 탓하며 빈손으로 용궁으로 돌아갔답니다.",
       "emotion": "warm",
       "image": "/story_image/rabbit_and_turtle/rat9.mp4"
     }
