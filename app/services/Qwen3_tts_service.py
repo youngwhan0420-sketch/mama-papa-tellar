@@ -9,9 +9,8 @@ ROOT_DIR = Path(__file__).parent.parent.parent
 OUTPUT_DIR = ROOT_DIR / "output"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-LOCAL_TTS_URL = os.getenv("LOCAL_TTS_URL", "https://cotton-kitty-notebooks-integer.trycloudflare.com")
+LOCAL_TTS_URL = os.getenv("LOCAL_TTS_URL", "https://weekends-morning-settings-herein.trycloudflare.com")
 
-# voice_id는 호환성을 위해 인자로 받지만 로컬 서버에선 아직 미사용
 def generate_voice_qwen(text, voice_id=None, emotion="joyful", speaker="Sohee"):
     payload = {
         "text": text,
@@ -40,7 +39,6 @@ def generate_voice_qwen(text, voice_id=None, emotion="joyful", speaker="Sohee"):
         print(f"❌ 서버 연결 실패: {e}")
         return None
 
-# enroll_voice는 나중에 로컬 보이스 클로닝 구현 시 사용 예정
 def enroll_voice(audio_path):
     print("⚠️ enroll_voice: 현재 로컬 서버는 보이스 클로닝 미지원. voice_id 반환 생략.")
     return "local_default"
