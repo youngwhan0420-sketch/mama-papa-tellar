@@ -7,7 +7,7 @@
       "speaker": "narrator",
       "text": "옛날 옛날 깊은 바닷속 용궁에, 용왕님이 몹쓸 병에 걸려 신음하고 계셨어요.",
       "emotion": "scary",
-      "image": "/story_image/rabbit_and_turtle/rat1.png"
+      "image": "/story_image/rabbit_and_turtle/rat1.mp4"
     },
     {
       "id": 2,
@@ -37,9 +37,9 @@
       "id": 5,
       "type": "dialogue",
       "speaker": "rabbit",
-      "text": "(당황하며) 아, 아차! 간 말인가요? 아이구, 용왕님! 제 간은 너무나 귀해서 육지 숲속 시원한 바위 밑에 꺼내 말려두고 왔는걸요!",
+      "text": "아, 아차! 간 말인가요? 아이구, 용왕님! 제 간은 너무나 귀해서 육지 숲속 시원한 바위 밑에 꺼내 말려두고 왔는걸요!",
       "emotion": "urgent",
-      "image": "/story_image/rabbit_and_turtle/rat5.png"
+      "image": "/story_image/rabbit_and_turtle/rat5.mp4"
     },
     {
       "id": 6,
@@ -71,7 +71,7 @@
       "speaker": "narrator",
       "text": "토끼는 지혜로운 꾀로 목숨을 구했고, 자라는 자신의 어리석음을 탓하며 빈손으로 용궁으로 돌아갔답니다.",
       "emotion": "warm",
-      "image": "/story_image/rabbit_and_turtle/rat9.png"
+      "image": "/story_image/rabbit_and_turtle/rat9.mp4"
     }
   ]
 }

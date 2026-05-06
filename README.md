@@ -1,3 +1,13 @@
+---
+title: Mama Papa Teller
+emoji: 🎙️
+colorFrom: pink
+colorTo: yellow
+sdk: docker
+app_file: app/main.py
+pinned: false
+---
+
 # 7조 프로젝트 계획서
 
 ## 마마파파텔러 (Mama papa Teller)

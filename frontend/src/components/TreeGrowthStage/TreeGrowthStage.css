@@ -1,0 +1,131 @@
+.tgs-wrapper {
+  padding: 28px 0 16px;   /* 위쪽 여백 충분히 확보 */
+  overflow: visible;
+}
+ 
+.tgs-header-text {
+  font-size: 11px;
+  color: #999;
+  margin: 0 0 10px;
+  text-align: center;
+}
+ 
+.tgs-roadmap {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-x: auto;
+  overflow-y: visible;      /* 위로 튀어올라도 안 잘림 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-top: 10px;        /* 애니메이션 여유 공간 */
+  padding-bottom: 2px;
+}
+.tgs-roadmap::-webkit-scrollbar {
+  display: none;
+}
+ 
+.tgs-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 64px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+ 
+.tgs-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid #e0e0e0;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  transition: border-color 0.2s, background 0.2s;
+  overflow: visible;
+}
+ 
+.tgs-icon-done {
+  border-color: #9FE1CB;
+  background: #f0faf6;
+}
+ 
+.tgs-icon-current {
+  width: 62px;
+  height: 62px;
+  border: 2.5px solid #1D9E75;
+  background: #e1f5ee;
+  margin-bottom: 6px;
+  margin-top: -7px;
+  overflow: visible;
+  animation: tgs-bounce 1.8s ease-in-out infinite;
+}
+ 
+@keyframes tgs-bounce {
+  0%,  100% { transform: translateY(0);    }
+  40%        { transform: translateY(-6px); }
+  60%        { transform: translateY(-3px); }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  .tgs-icon-current {
+    animation: none;
+  }
+}
+ 
+.tgs-emoji {
+  font-size: 22px;
+  line-height: 1;
+  display: block;
+}
+.tgs-emoji-current {
+  font-size: 30px;
+}
+ 
+.tgs-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: #aaa;
+  margin: 0 0 2px;
+  text-align: center;
+}
+.tgs-name-done {
+  color: #9FE1CB;
+}
+.tgs-name-current {
+  color: #1D9E75;
+  font-size: 11px;
+}
+ 
+.tgs-badge {
+  font-size: 9px;
+  font-weight: 600;
+  color: #ccc;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 20px;
+}
+.tgs-badge-done {
+  color: #9FE1CB;
+  background: #f0faf6;
+}
+.tgs-badge-current {
+  color: #085041;
+  background: #e1f5ee;
+  font-size: 10px;
+}
+ 
+.tgs-connector {
+  width: 16px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
+  padding-top: 16px;
+  line-height: 1;
+  overflow: visible;
+}

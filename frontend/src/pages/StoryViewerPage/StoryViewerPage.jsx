@@ -4,7 +4,33 @@ import API_BASE_URL from "../../config/apiConfig";
 import EmotionBar from "../../components/EmotionBar/EmotionBar.jsx";
 import StoryNavigation from "../../components/StoryNavigation/StoryNavigation.jsx";
 import StorySlide from "../../components/StorySlide/StorySlide.jsx";
+import PlaybackRateControl from "../../components/PlaybackRateControl/PlaybackRateControl.jsx";
 import "./StoryViewerPage.css";
+
+// 완청 편수를 localStorage에 1 올려주는 함수
+// 같은 동화를 여러 번 들어도 중복 카운트 안 되도록 storyId로 체크
+function markStoryCompleted(storyId) {
+    const KEY_COUNT   = 'mpt_completed_books';
+    const KEY_RECENT  = 'mpt_recent_stories';
+
+    const recentStories = JSON.parse(localStorage.getItem(KEY_RECENT) || '[]');
+
+    // 최근 목록에서 해당 storyId 찾기
+    const alreadyCompleted = recentStories.some(
+        (s) => s.story_id === storyId && s.completed
+    );
+    if (alreadyCompleted) return;
+
+    // completed 플래그 추가
+    const updated = recentStories.map((s) =>
+        s.story_id === storyId ? { ...s, completed: true } : s
+    );
+    localStorage.setItem(KEY_RECENT, JSON.stringify(updated));
+
+    // 완청 편수 = completed인 항목 수
+    const count = updated.filter((s) => s.completed).length;
+    localStorage.setItem(KEY_COUNT, String(count));
+}
 
 function StoryViewerPage() {
   const { storyId } = useParams();
@@ -18,12 +44,19 @@ function StoryViewerPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
 
+  // 속도 조절
+  const [playbackRate, setPlaybackRate] = useState(
+    () => Number(localStorage.getItem("mpt_playback_rate")) || 1
+  );
+
   // 2. 오디오 제어를 위한 Ref
   const audioRef = useRef(null);
 
   // 3. 데이터 로드 (목소리 ID 및 상황 정보)
   const voiceId = location.state?.voiceId;
   const situation = location.state?.situation;
+  const narratorVoiceId = location.state?.narratorVoiceId;
+  const characterVoiceId = location.state?.characterVoiceId;
 
   // 4. 현재 페이지 정보 (서버에서 받은 실제 데이터만 사용!)
   const storyData = dynamicTimeline;
@@ -69,7 +102,7 @@ function StoryViewerPage() {
   };
 
   useEffect(() => {
-    if (!voiceId) {
+    if (!voiceId && !(narratorVoiceId && characterVoiceId)) {
       alert("목소리 정보가 없어요. 메인으로 돌아갑니다.");
       navigate("/");
       return;
@@ -78,9 +111,10 @@ function StoryViewerPage() {
     const initStoryAudio = async () => {
       try {
         // 1. 서버에서 오디오와 타임라인 한 번에 가져오기
-        const response = await fetch(
-          `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}`,
-        );
+        const streamUrl = (narratorVoiceId && characterVoiceId)
+            ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}`
+            : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}`;
+        const response = await fetch(streamUrl);
 
         // 헤더에서 인코딩된 타임라인 추출 및 디코딩
         const encoded = response.headers.get("X-Story-Timeline");
@@ -93,6 +127,8 @@ function StoryViewerPage() {
         const blob = await response.blob();
         const audio = new Audio(URL.createObjectURL(blob));
         audioRef.current = audio;
+        // 속도 조절
+        audio.playbackRate = playbackRate;
 
         // 3. 리스너 등록 (로딩 완료, 재생/일시정지, 시간 업데이트, 종료)
         audio.oncanplaythrough = () => setIsLoading(false);
@@ -101,6 +137,7 @@ function StoryViewerPage() {
         audio.onended = () => {
           setIsPlaying(false);
           setIsFinished(true); // 동화 종료 오버레이 띄우기
+          markStoryCompleted(storyId);
         };
 
         // 📝 클로저(Closure) 이슈를 피하기 위해 함수형 업데이트 사용
@@ -140,7 +177,7 @@ function StoryViewerPage() {
         audioRef.current = null;
       }
     };
-  }, [storyId, voiceId, navigate]);
+  }, [storyId, voiceId, narratorVoiceId, characterVoiceId, navigate]);
 
   // 5. 핸들러 함수
   const handlePrevPage = () => {
@@ -181,6 +218,15 @@ function StoryViewerPage() {
       audioRef.current.pause();
     } else {
       audioRef.current.play();
+    }
+  };
+
+  const handlePlaybackRateChange = (rate) => {
+    setPlaybackRate(rate);
+    localStorage.setItem("mpt_playback_rate", String(rate));
+
+    if (audioRef.current) {
+      audioRef.current.playbackRate = rate;
     }
   };
 
@@ -232,6 +278,14 @@ function StoryViewerPage() {
             <EmotionBar
               emotion={currentPage.emotion}
               emotionLevel={currentPage.emotionLevel || 3}
+            />
+          )}
+
+          {/* 속도 조절 */}
+          {!isLoading && currentPage && (
+            <PlaybackRateControl
+              playbackRate={playbackRate}
+              onChange={handlePlaybackRateChange}
             />
           )}
 
