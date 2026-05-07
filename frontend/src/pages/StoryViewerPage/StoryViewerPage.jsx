@@ -6,6 +6,7 @@ import StoryNavigation from "../../components/StoryNavigation/StoryNavigation.js
 import StorySlide from "../../components/StorySlide/StorySlide.jsx";
 import PlaybackRateControl from "../../components/PlaybackRateControl/PlaybackRateControl.jsx";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import "./StoryViewerPage.css";
 
 // ─── 완청 기록 ────────────────────────────────────────────────────────────────
@@ -42,6 +43,8 @@ function StoryViewerPage() {
   const situation = location.state?.situation;
   const narratorVoiceId = location.state?.narratorVoiceId;
   const characterVoiceId = location.state?.characterVoiceId;
+  const childName = location.state?.childName || "";
+  const useChildProtagonist = location.state?.useChildProtagonist || false;
 
   const [sceneQueue, setSceneQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -188,8 +191,8 @@ function StoryViewerPage() {
     const fetchStream = async () => {
       try {
         const streamUrl = (narratorVoiceId && characterVoiceId)
-            ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
-            : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`;
+          ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
+          : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`;
         const response = await fetch(streamUrl);
 
         // 헤더에서 전체 씬 수 받아오기
@@ -299,9 +302,9 @@ function StoryViewerPage() {
 
           {/* 메인 동화 슬라이드 */}
           {isLoading || !currentScene ? (
-            <div className="loading-container">
-              <p>엄마 아빠 목소리를 열심히 가져오고 있어요...✨</p>
-            </div>
+            <LoadingOverlay
+              message={<>엄마 아빠 목소리를 불러오고 있어...<br />잠시만 기다려줘! ✨</>}
+            />
           ) : (
             <StorySlide
               page={{
