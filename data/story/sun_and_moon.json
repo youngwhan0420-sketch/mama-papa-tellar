@@ -31,7 +31,7 @@
       "speaker": "tiger",
       "text": "떡 하나 주면 안 잡아먹지!",
       "emotion": "greedy",
-      "image": "/story_image/sun_and_moon/sam3.png"
+      "image": "/story_image/sun_and_moon/sam3.mp4"
     },
     {
       "id": 5,
@@ -90,7 +90,7 @@
       "text": "하늘에서 내려온 줄을 타고 오누이는 해와 달이 되었고, 썩은 줄을 잡은 호랑이는 수수밭으로 떨어졌답니다.",
       "text_child": "하늘에서 내려온 줄을 타고 {이름이는} 해와 달이 되었고, 썩은 줄을 잡은 호랑이는 수수밭으로 떨어졌답니다.",
       "emotion": "happy",
-      "image": "/story_image/sun_and_moon/sam10.png"
+      "image": "/story_image/sun_and_moon/sam10.mp4"
     }
   ]
 }
