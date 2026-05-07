@@ -20,10 +20,11 @@ function StoryListViewPage() {
     const [showModeModal, setShowModeModal] = useState(false);
     const [selectedStory, setSelectedStory] = useState(null);
     const [narratorKey, setNarratorKey] = useState(null);
-    const [characterKey, setCharacterKey] = useState(null);
+    const [characterMap, setCharacterMap] = useState({});
     const [voiceList, setVoiceList] = useState([]);
     const [childName, setChildName] = useState("");
     const [useChildProtagonist, setUseChildProtagonist] = useState(false);
+    const [modalStep, setModalStep] = useState(1);
     const itemsPerPage = 4;
 
     // 다음 문장으로 넘기는 함수
@@ -49,22 +50,21 @@ function StoryListViewPage() {
                 setScriptLines(data.scripts || []);
             })
             .catch((err) => console.error("스크립트 로딩 실패:", err));
-
-        // 목소리 로드 추가
-        const keys = Object.keys(localStorage).filter(
-            (k) => k.startsWith("mpt_") && k.endsWith("_voice_id")
-        );
-        const list = keys.map((k) => ({
-            key: k,
-            name: k.replace("mpt_", "").replace("_voice_id", ""),
-            id: localStorage.getItem(k),
-        }));
-        setVoiceList(list);
-        if (list.length > 0) {
-            setNarratorKey(list[0].key);
-            setCharacterKey(list.length > 1 ? list[1].key : list[0].key);
-        }
-        setChildName(localStorage.getItem("mpt_child_name") || "");
+    
+    // 목소리 로드 추가
+    const keys = Object.keys(localStorage).filter(
+        (k) => k.startsWith("mpt_") && k.endsWith("_voice_id")
+    );
+    const list = keys.map((k) => ({
+        key: k,
+        name: k.replace("mpt_", "").replace("_voice_id", ""),
+        id: localStorage.getItem(k),
+    }));
+    setVoiceList(list);
+    if (list.length > 0) {
+        setNarratorKey(list[0].key);
+    }
+    setChildName(localStorage.getItem("mpt_child_name") || "");
     }, []);
 
     const handleVoiceRegister = async (audioBlob) => {
@@ -140,30 +140,35 @@ function StoryListViewPage() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentStories = stories.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(stories.length / itemsPerPage);
+    const closeModal = () => {setShowModeModal(false); setModalStep(1);};
 
     // 핸들러 함수 추가
     const handleNormalStart = () => {
-        setShowModeModal(false);
-        navigate(`/story/${selectedStory.story_id}`, {
-            state: {
-                voiceId: localStorage.getItem(narratorKey),
-                childName,
-                useChildProtagonist,
-            },
-        });
-    };
+    closeModal();
+    navigate(`/story/${selectedStory.story_id}`, {
+        state: { 
+            voiceId: localStorage.getItem(narratorKey),
+            childName,
+            useChildProtagonist,
+        },
+    });
+};
 
     const handleRoleplayStart = () => {
-        setShowModeModal(false);
-        navigate(`/story/${selectedStory.story_id}`, {
-            state: {
-                narratorVoiceId: localStorage.getItem(narratorKey),
-                characterVoiceId: localStorage.getItem(characterKey),
-                childName,
-                useChildProtagonist,
-            },
-        });
-    };
+    closeModal();
+    const voiceMap = {};
+    Object.entries(characterMap).forEach(([speaker, key]) => {
+        voiceMap[speaker] = localStorage.getItem(key);
+    });
+    navigate(`/story/${selectedStory.story_id}`, {
+        state: {
+            narratorVoiceId: localStorage.getItem(narratorKey),
+            characterVoiceMap: voiceMap,
+            childName,
+            useChildProtagonist,
+        },
+    });
+};
 
     return (
         <div className="tablet-page">
@@ -216,6 +221,10 @@ function StoryListViewPage() {
                                         saveRecentStory(story);
 
                                         setSelectedStory(story);
+                                        const defaultKey = voiceList.length > 1 ? voiceList[1].key : voiceList[0]?.key;
+                                        const initMap = {};
+                                        story.characters?.forEach(c => { initMap[c.speaker] = defaultKey; });
+                                        setCharacterMap(initMap);
                                         setShowModeModal(true);
                                     } else {
                                         alert("목소리를 먼저 등록해 주세요! 🎙️");
@@ -241,71 +250,124 @@ function StoryListViewPage() {
                     <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)} className="pag-btn">다음</button>
                 </div>
             </main>
-            {showModeModal && ( // 모달 jsx 추가
-                <div className="mode-modal-overlay" onClick={() => setShowModeModal(false)}>
+            {showModeModal && (
+                <div className="mode-modal-overlay" onClick={closeModal}>
                     <div className="mode-modal-card" onClick={(e) => e.stopPropagation()}>
-                        <h3>누가 읽어줄까요?</h3>
 
-                        <p className="role-label">📖 내레이터 <span className="role-desc">이야기 설명 목소리</span></p>
-                        <div className="role-voice-list">
-                            {voiceList.map((v) => (
-                                <button
-                                    key={v.key}
-                                    className={`role-voice-btn ${narratorKey === v.key ? "selected" : ""}`}
-                                    onClick={() => setNarratorKey(v.key)}
-                                >
-                                    {narratorKey === v.key ? "🌟" : "🎙️"} {v.name}
+                        {modalStep === 1 ? (
+                            <>
+                                <h3>어떻게 들을까요?</h3>
+
+                                {/* 목소리 선택 - 컴팩트 */}
+                                <div className="narrator-row">
+                                    <span className="narrator-row-label">🎙️ 목소리</span>
+                                    {voiceList.map((v) => (
+                                        <button
+                                            key={v.key}
+                                            className={`role-voice-btn ${narratorKey === v.key ? "selected" : ""}`}
+                                            onClick={() => setNarratorKey(v.key)}
+                                        >
+                                            {narratorKey === v.key ? "🌟" : "🎙️"} {v.name}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* 주인공 모드 토글 */}
+                                <div className="protagonist-toggle">
+                                    <button
+                                        className={`toggle-btn ${!useChildProtagonist ? "active" : ""}`}
+                                        onClick={() => setUseChildProtagonist(false)}
+                                    >
+                                        일반 모드
+                                    </button>
+                                    <button
+                                        className={`toggle-btn ${useChildProtagonist ? "active" : ""}`}
+                                        onClick={() => setUseChildProtagonist(true)}
+                                        disabled={!childName}
+                                        style={{ opacity: !childName ? 0.4 : 1 }}
+                                    >
+                                        👶 {childName ? `${childName} 주인공` : "주인공 모드"}
+                                    </button>
+                                </div>
+
+                                {/* 모드 선택 버튼 */}
+                                <hr style={{ margin: "14px 0", border: "none", borderTop: "1px solid #eee" }} />
+                                <button className="mode-select-btn" onClick={handleNormalStart}>
+                                    🎙️ 한 목소리로 듣기
                                 </button>
-                            ))}
-                        </div>
-
-                        <p className="role-label">🎭 등장인물 <span className="role-desc">{selectedStory?.characters?.join(", ")}</span></p>
-                        <div className="role-voice-list">
-                            {voiceList.map((v) => (
                                 <button
-                                    key={v.key}
-                                    className={`role-voice-btn ${characterKey === v.key ? "selected" : ""}`}
-                                    onClick={() => setCharacterKey(v.key)}
+                                    className="mode-select-btn roleplay"
+                                    onClick={() => {
+                                        const ordered = [
+                                            ...voiceList.filter(v => v.key !== narratorKey),
+                                            ...voiceList.filter(v => v.key === narratorKey),
+                                        ];
+                                        const initMap = {};
+                                        selectedStory?.characters?.forEach((c, i) => {
+                                            initMap[c.speaker] = ordered[i % ordered.length].key;
+                                        });
+                                        setCharacterMap(initMap);
+                                        setModalStep(2);
+                                    }}
+                                    disabled={voiceList.length < 2}
+                                    style={{ opacity: voiceList.length < 2 ? 0.5 : 1 }}
                                 >
-                                    {characterKey === v.key ? "🌟" : "🎙️"} {v.name}
+                                    🎭 역할극으로 듣기
+                                    {voiceList.length < 2 && (
+                                        <span style={{ fontSize: "11px", display: "block" }}>목소리 2개 필요</span>
+                                    )}
                                 </button>
-                            ))}
-                        </div>
-                        <hr style={{ margin: "12px 0", border: "none", borderTop: "1px solid #eee" }} />
-                        <div className="protagonist-toggle">
-                            <button
-                                className={`toggle-btn ${!useChildProtagonist ? "active" : ""}`}
-                                onClick={() => setUseChildProtagonist(false)}
-                            >
-                                일반 모드
-                            </button>
-                            <button
-                                className={`toggle-btn ${useChildProtagonist ? "active" : ""}`}
-                                onClick={() => setUseChildProtagonist(true)}
-                                disabled={!childName}
-                                style={{ opacity: !childName ? 0.4 : 1 }}
-                            >
-                                👶 {childName ? `${childName} 주인공` : "주인공 모드"}
-                            </button>
-                        </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* Step 2: 역할극 목소리 배정 */}
+                                <div className="modal-step2-header">
+                                    <button className="back-btn" onClick={() => setModalStep(1)}>← 뒤로</button>
+                                    <h3>목소리 배정</h3>
+                                </div>
 
-                        <div className="mode-btn-group">
-                            <button className="normal-start-btn" onClick={handleNormalStart}>
-                                한 목소리로 읽기
-                            </button>
-                            <button
-                                className="roleplay-start-btn"
-                                onClick={handleRoleplayStart}
-                                disabled={voiceList.length < 2}
-                                style={{ opacity: voiceList.length < 2 ? 0.5 : 1 }}
-                            >
-                                🎭 역할극 모드
-                                {voiceList.length < 2 && <span style={{ fontSize: "11px", display: "block" }}>목소리 2개 필요</span>}
-                            </button>
-                        </div>
+                                {/* 내레이터 */}
+                                <div className="char-voice-row">
+                                    <span className="char-name">내레이터</span>
+                                    <div className="role-voice-list">
+                                        {voiceList.map((v) => (
+                                            <button
+                                                key={v.key}
+                                                className={`role-voice-btn ${narratorKey === v.key ? "selected" : ""}`}
+                                                onClick={() => setNarratorKey(v.key)}
+                                            >
+                                                {narratorKey === v.key ? "🌟" : "🎙️"} {v.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* 캐릭터별 */}
+                                {selectedStory?.characters?.map((char) => (
+                                    <div key={char.speaker} className="char-voice-row">
+                                        <span className="char-name">{char.name}</span>
+                                        <div className="role-voice-list">
+                                            {voiceList.map((v) => (
+                                                <button
+                                                    key={v.key}
+                                                    className={`role-voice-btn ${characterMap[char.speaker] === v.key ? "selected" : ""}`}
+                                                    onClick={() => setCharacterMap(prev => ({ ...prev, [char.speaker]: v.key }))}
+                                                >
+                                                    {characterMap[char.speaker] === v.key ? "🌟" : "🎙️"} {v.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+
+                                <button className="normal-start-btn" style={{ marginTop: "16px" }} onClick={handleRoleplayStart}>
+                                    ▶ 시작
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
-            )}
+)}
         </div>
     );
 }

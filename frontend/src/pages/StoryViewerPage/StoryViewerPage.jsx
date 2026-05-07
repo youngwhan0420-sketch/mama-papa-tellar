@@ -42,7 +42,7 @@ function StoryViewerPage() {
   const voiceId = location.state?.voiceId;
   const situation = location.state?.situation;
   const narratorVoiceId = location.state?.narratorVoiceId;
-  const characterVoiceId = location.state?.characterVoiceId;
+  const characterVoiceMap = location.state?.characterVoiceMap;
   const childName = location.state?.childName || "";
   const useChildProtagonist = location.state?.useChildProtagonist || false;
 
@@ -129,7 +129,7 @@ function StoryViewerPage() {
 
   // ── 스트림 수신 + 오디오 관리 useEffect ────────────────────────────────────────────
   useEffect(() => {
-    if (!voiceId && !(narratorVoiceId && characterVoiceId)) {
+    if (!voiceId && !(narratorVoiceId && characterVoiceMap)) {
       alert("목소리 정보가 없어요. 메인으로 돌아갑니다.");
       navigate("/");
       return;
@@ -190,8 +190,8 @@ function StoryViewerPage() {
 
     const fetchStream = async () => {
       try {
-        const streamUrl = (narratorVoiceId && characterVoiceId)
-          ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
+        const streamUrl = (narratorVoiceId && characterVoiceMap)
+          ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_map=${encodeURIComponent(JSON.stringify(characterVoiceMap))}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
           : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`;
         const response = await fetch(streamUrl);
 
@@ -229,7 +229,7 @@ function StoryViewerPage() {
         clearInterval(waitIntervalRef.current);
       }
     };
-  }, [storyId, voiceId, narratorVoiceId, characterVoiceId, navigate]);
+  }, [storyId, voiceId, narratorVoiceId, characterVoiceMap, navigate]);
 
   // ── 핸들러 ──────────────────────────────────────────────────────────────
   const togglePlay = () => {
