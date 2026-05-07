@@ -21,10 +21,13 @@ function WhoIsItViewPage() {
 
     // 현재 재생 중인 오디오를 담아둘 Ref
     const activeAudioRef = useRef(null);
+    const isMounted = useRef(true);
 
     // 페이지를 아예 나갈 때(언마운트)를 위한 안전장치 추가
     useEffect(() => {
+        isMounted.current = true;
         return () => {
+            isMounted.current = false;
             if (activeAudioRef.current) {
                 activeAudioRef.current.pause();
                 activeAudioRef.current = null;
@@ -155,6 +158,8 @@ function WhoIsItViewPage() {
                 method: "GET",
             });
 
+            if (!isMounted.current) return;
+
             if (response.ok) {
                 const audioBlob = await response.blob();
                 const audioUrl = URL.createObjectURL(audioBlob);
@@ -162,6 +167,8 @@ function WhoIsItViewPage() {
                 const audio = new Audio(audioUrl);
                 activeAudioRef.current = audio; // 6. 보물 상자에 넣어두기
                 audio.play(); // 아이에게 다정한 힌트 들려주기!
+
+                if (!isMounted.current) return;
 
                 if (!resultAudioUrls.correct && fixedMessages.correct) {
                     const correctText = formatMessage(fixedMessages.correct);
@@ -188,7 +195,9 @@ function WhoIsItViewPage() {
         } catch (err) {
             console.error("음성 재생 실패:", err);
         } finally {
-            setIsLoading(false);
+            if (isMounted.current) {
+                setIsLoading(false);
+            }
         }
     };
 
