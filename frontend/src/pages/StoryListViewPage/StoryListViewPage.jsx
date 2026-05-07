@@ -22,6 +22,8 @@ function StoryListViewPage() {
     const [narratorKey, setNarratorKey] = useState(null);
     const [characterKey, setCharacterKey] = useState(null);
     const [voiceList, setVoiceList] = useState([]);
+    const [childName, setChildName] = useState("");
+    const [useChildProtagonist, setUseChildProtagonist] = useState(false);
     const itemsPerPage = 4;
 
     // 다음 문장으로 넘기는 함수
@@ -62,7 +64,7 @@ function StoryListViewPage() {
         setNarratorKey(list[0].key);
         setCharacterKey(list.length > 1 ? list[1].key : list[0].key);
     }
-
+    setChildName(localStorage.getItem("mpt_child_name") || "");
     }, []);
 
     const handleVoiceRegister = async (audioBlob) => {
@@ -143,7 +145,11 @@ function StoryListViewPage() {
     const handleNormalStart = () => {
     setShowModeModal(false);
     navigate(`/story/${selectedStory.story_id}`, {
-        state: { voiceId: localStorage.getItem(narratorKey) },
+        state: { 
+            voiceId: localStorage.getItem(narratorKey),
+            childName,
+            useChildProtagonist,
+        },
     });
 };
 
@@ -153,6 +159,8 @@ function StoryListViewPage() {
         state: {
             narratorVoiceId: localStorage.getItem(narratorKey),
             characterVoiceId: localStorage.getItem(characterKey),
+            childName,
+            useChildProtagonist,
         },
     });
 };
@@ -172,6 +180,20 @@ function StoryListViewPage() {
                     <p className="service-label">MAMA / PAPA TELLER</p>
                     <h1 className="main-title">우리 아이 동화 도서관</h1>
                 </header>
+                <div className="child-name-section">
+                    <span className="child-name-label">우리 아이 이름</span>
+                    <input
+                        className="child-name-input"
+                        type="text"
+                        placeholder="예: 민준, 윤서"
+                        value={childName}
+                        onChange={(e) => {
+                            setChildName(e.target.value);
+                            localStorage.setItem("mpt_child_name", e.target.value);
+                        }}
+                        maxLength={6}
+                    />
+                </div>
 
                 <button
                     type="button"
@@ -246,6 +268,23 @@ function StoryListViewPage() {
                                     {characterKey === v.key ? "🌟" : "🎙️"} {v.name}
                                 </button>
                             ))}
+                        </div>
+                        <hr style={{ margin: "12px 0", border: "none", borderTop: "1px solid #eee" }} />
+                        <div className="protagonist-toggle">
+                            <button
+                                className={`toggle-btn ${!useChildProtagonist ? "active" : ""}`}
+                                onClick={() => setUseChildProtagonist(false)}
+                            >
+                                일반 모드
+                            </button>
+                            <button
+                                className={`toggle-btn ${useChildProtagonist ? "active" : ""}`}
+                                onClick={() => setUseChildProtagonist(true)}
+                                disabled={!childName}
+                                style={{ opacity: !childName ? 0.4 : 1 }}
+                            >
+                                👶 {childName ? `${childName} 주인공` : "주인공 모드"}
+                            </button>
                         </div>
 
                         <div className="mode-btn-group">

@@ -24,6 +24,19 @@ FRONTEND_DIST_DIR = BASE_DIR / "frontend" / "dist"
 PREFETCH = 2
 
 
+def replace_child_name(text: str, name: str) -> str:
+    last = ord(name[-1])
+    b = 0xAC00 <= last <= 0xD7A3 and (last - 0xAC00) % 28 != 0
+    return text \
+        .replace("{이름이가}", name + ("이가" if b else "가")) \
+        .replace("{이름이는}", name + ("이는" if b else "는")) \
+        .replace("{이름이를}", name + ("이를" if b else "를")) \
+        .replace("{이름이와}", name + ("이와" if b else "와")) \
+        .replace("{이름이의}", name + ("이의" if b else "의")) \
+        .replace("{이름이}", name + ("이" if b else "")) \
+        .replace("{이름}", name)
+
+
 def normalize_image_path(raw_image):
     if not raw_image:
         return ""
@@ -78,6 +91,7 @@ PAUSE_MS = {
     "happy": 600, "joyful": 500, "urgent": 400, "greedy": 600,
     "sad": 1000, "shocked": 900,
     "scary": 1200, "stern": 900,
+    "hungry": 600, "painful": 800,
 }
 
 
@@ -133,6 +147,8 @@ async def stream_story_audio_jms(
     voice_id: str = Query(None),
     narrator_voice_id: str = Query(None),
     character_voice_id: str = Query(None),
+    child_name: str = Query(None),
+    use_child_protagonist: str = Query("false"),
 ):
     narrator_vid  = narrator_voice_id or voice_id
     character_vid = character_voice_id or voice_id

@@ -6,6 +6,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "옛날 옛날 어느 깊은 산골에, 마음씨 착한 나무꾼이 나무를 하며 살고 있었어요.",
+      "text_child": "옛날 옛날 어느 깊은 산골에, 마음씨 착한 나무꾼인 {이름이가} 나무를 하며 살고 있었어요.",
       "emotion": "warm",
       "image": "/story_image/fairy_and_woodcutter/faw1.png"
     },
@@ -22,6 +23,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "나무꾼은 사슴을 숨겨주었고, 사슴은 목숨을 구한 보답으로 선녀들이 목욕하는 폭포와 날개옷을 훔치는 법을 알려주었죠.",
+      "text_child": "{이름이는} 사슴을 숨겨주었고, 사슴은 목숨을 구한 보답으로 선녀들이 목욕하는 폭포와 날개옷을 훔치는 법을 알려주었죠.",
       "emotion": "warm",
       "image": "/story_image/fairy_and_woodcutter/faw3.png"
     },
@@ -30,6 +32,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "나무꾼은 폭포 근처 바위 뒤에 숨어 있다가, 가장 아름다운 선녀의 날개옷 한 벌을 몰래 가져와 깊숙한 곳에 숨겨버렸어요.",
+      "text_child": "{이름이는} 폭포 근처 바위 뒤에 숨어 있다가, 가장 아름다운 선녀의 날개옷 한 벌을 몰래 가져와 깊숙한 곳에 숨겨버렸어요.",
       "emotion": "scary",
       "image": "/story_image/fairy_and_woodcutter/faw4.png"
     },
@@ -46,6 +49,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "갈 곳 없는 선녀는 나무꾼과 결혼해 아이 셋을 낳을 때까지 날개옷을 찾지 못한 채 그리움 속에 살았답니다.",
+      "text_child": "갈 곳 없는 선녀는 {이름이와} 결혼해 아이 셋을 낳을 때까지 날개옷을 찾지 못한 채 그리움 속에 살았답니다.",
       "emotion": "warm",
       "image": "/story_image/fairy_and_woodcutter/faw6.png"
     },

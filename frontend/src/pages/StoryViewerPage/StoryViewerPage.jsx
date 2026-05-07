@@ -188,9 +188,8 @@ function StoryViewerPage() {
     const fetchStream = async () => {
       try {
         const streamUrl = (narratorVoiceId && characterVoiceId)
-          ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}`
-          : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}`;
-
+            ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
+            : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`;
         const response = await fetch(streamUrl);
 
         // 헤더에서 전체 씬 수 받아오기

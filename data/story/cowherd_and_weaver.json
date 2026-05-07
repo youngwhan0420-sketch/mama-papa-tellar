@@ -6,6 +6,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "옛날 옛날 아주 먼 하늘나라에, 소를 치는 견우와 베를 짜는 직녀가 살고 있었어요.",
+      "text_child": "옛날 옛날 아주 먼 하늘나라에, 소를 치는 견우인 {이름이와} 베를 짜는 직녀가 살고 있었어요.",
       "emotion": "warm",
       "image": "/story_image/cowherd_and_weaver/caw1.png"
     },
@@ -44,6 +45,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "이 안타까운 사연을 들은 전국의 까치와 까마귀들이 하늘로 날아올라 머리를 맞대고 오작교를 만들어 주었답니다.",
+      "text_child": "이 안타까운 사연을 들은 전국의 까치와 까마귀들이 하늘로 날아올라 머리를 맞대고 {이름이를} 위해 오작교를 만들어 주었답니다.",
       "emotion": "warm",
       "image": "/story_image/cowherd_and_weaver/caw5.mp4"
     },
@@ -68,6 +70,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "두 사람은 짧은 만남을 뒤로하고 다시 헤어지며 눈물을 흘렸고, 그 눈물이 비가 되어 땅으로 내렸답니다.",
+      "text_child": "{이름이는} 짧은 만남을 뒤로하고 다시 헤어지며 눈물을 흘렸고, 그 눈물이 비가 되어 땅으로 내렸답니다.",
       "emotion": "warm",
       "image": "/story_image/cowherd_and_weaver/caw8.mp4"
     }
