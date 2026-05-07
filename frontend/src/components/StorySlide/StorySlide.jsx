@@ -1,42 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./StorySlide.css";
 
 function StorySlide({ page }) {
-  const [isError, setIsError] = useState(false);
+  const videoRef = useRef(null);
 
-  // 1. 파일 주소 해결 함수 (기존 로직 유지)
+  const [isError, setIsError] = useState(false);
+  const [displaySrc, setDisplaySrc] = useState("");
+  const [isVideoReady, setIsVideoReady] = useState(false);
+
+  // 1. 파일 주소 해결 함수
   const resolveMediaSrc = (src) => {
     if (!src) return "";
-
-    // 외부 주소, base64, blob 주소는 그대로 사용
-    if (/^(https?:|data:|blob:)/.test(src)) {
-      return src;
-    }
-
-    // /로 시작하면 그대로 사용
-    if (src.startsWith("/")) {
-      return src;
-    }
-
-    // 그 외에는 앞에 / 붙이기
+    if (/^(https?:|data:|blob:)/.test(src)) return src;
+    if (src.startsWith("/")) return src;
     return `/${src}`;
   };
 
-  const mediaSrc = resolveMediaSrc(page?.image);
-
-  // 2. 입력된 파일이 MP4 비디오인지 판별하는 함수
+  // 2. MP4 비디오 판별 함수
   const isVideoFile = (src) => {
     if (!src) return false;
-    // 확장자가 .mp4로 끝나거나 mp4 문자열을 포함하고 있는지 체크
     return src.toLowerCase().endsWith(".mp4") || src.toLowerCase().includes(".mp4");
   };
 
-  const isVideo = isVideoFile(mediaSrc);
+  const newSrc = resolveMediaSrc(page?.image);
 
-  // 미디어 소스가 바뀔 때마다 에러 상태 초기화
+  // 3. 새 미디어 로드 완료 후 교체
   useEffect(() => {
     setIsError(false);
-  }, [mediaSrc]);
+    setIsVideoReady(false);
+
+    if (!newSrc) {
+      setDisplaySrc("");
+      return;
+    }
+
+    if (isVideoFile(newSrc)) {
+      setDisplaySrc(newSrc);
+    } else {
+      const img = new Image();
+      img.src = newSrc;
+
+      img.onload = () => {
+        setDisplaySrc(newSrc);
+      };
+
+      img.onerror = () => {
+        setDisplaySrc(newSrc);
+        setIsError(true);
+      };
+    }
+  }, [newSrc]);
+
+  const isVideo = isVideoFile(displaySrc);
 
   if (!page) {
     return <div className="illustration-card">데이터를 기다리는 중...</div>;
@@ -48,24 +63,43 @@ function StorySlide({ page }) {
         className="illustration-card"
         style={{ position: "relative", overflow: "hidden" }}
       >
-        {mediaSrc ? (
+        {displaySrc ? (
           isVideo ? (
-            /* 🎥 비디오(MP4) 재생 영역 */
-            <video
-              className="illustration-image" // 기존 CSS 스타일(크기, 비율 등)을 그대로 유지하도록 클래스 적용
-              src={mediaSrc}
-              autoPlay
-              loop
-              muted
-              playsInline
-              onError={() => setIsError(true)}
-              style={{ objectFit: "cover", width: "100%", height: "100%" }}
-            />
+            <>
+              <video
+                ref={videoRef}
+                key={displaySrc}
+                className="illustration-image"
+                src={displaySrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                controls={false}
+                disablePictureInPicture
+                controlsList="nodownload nofullscreen noplaybackrate"
+                onLoadedData={() => {
+                  videoRef.current
+                    ?.play()
+                    .then(() => setIsVideoReady(true))
+                    .catch(() => setIsVideoReady(true));
+                }}
+                onPlaying={() => setIsVideoReady(true)}
+                onError={() => setIsError(true)}
+                style={{
+                  objectFit: "cover",
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  opacity: isVideoReady ? 1 : 0,
+                }}
+              />
+            </>
           ) : (
-            /* 🖼️ 일반 이미지 재생 영역 */
             <img
               className="illustration-image"
-              src={mediaSrc}
+              src={displaySrc}
               alt="동화 이미지"
               onError={() => setIsError(true)}
             />
@@ -74,7 +108,6 @@ function StorySlide({ page }) {
           <div className="image-empty-box">이미지나 영상이 없습니다.</div>
         )}
 
-        {/* 🚨 미디어 로드 실패 시 에러 화면 */}
         {isError && (
           <div
             style={{
@@ -92,7 +125,7 @@ function StorySlide({ page }) {
               flexDirection: "column",
               justifyContent: "center",
               border: "2px solid red",
-              zIndex: 10, // 비디오 위로 에러 창이 확실히 보이도록 레이어 순서 지정
+              zIndex: 10,
             }}
           >
             <p style={{ fontWeight: "bold", marginBottom: "10px" }}>
@@ -104,7 +137,7 @@ function StorySlide({ page }) {
             </p>
             <p>
               <strong>실제 적용 주소:</strong>{" "}
-              {mediaSrc || "값이 없음(null/undefined)"}
+              {displaySrc || "값이 없음(null/undefined)"}
             </p>
             <p style={{ marginTop: "10px", fontSize: "12px", color: "#666" }}>
               frontend/public 안에 넣었다면 주소는

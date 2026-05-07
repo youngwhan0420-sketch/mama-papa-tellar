@@ -1,4 +1,5 @@
 import os
+import uuid
 import requests
 import base64
 import pathlib
@@ -47,7 +48,8 @@ def enroll_voice(audio_path):
     return voice_id
 
 # 2단계: TTS 생성
-def generate_voice_qwen(text, voice_id, emotion="joyful"):
+# scene_id를 받아서 고유한 파일명으로 저장 → 동시 요청 시 파일 덮어쓰기 방지
+def generate_voice_qwen(text, voice_id, emotion="joyful", scene_id=None):
 
     dashscope.base_http_api_url = 'https://dashscope-intl.aliyuncs.com/api/v1'
 
@@ -62,14 +64,15 @@ def generate_voice_qwen(text, voice_id, emotion="joyful"):
     if response.status_code == 200:
         audio_url = response.output.audio["url"]
         audio_data = requests.get(audio_url).content
-                
-        # 생성된 음성 데이터를 경로에 저장합니다.
-        final_filename = str(OUTPUT_DIR / f"{emotion}_result.mp3") 
+
+        # scene_id가 있으면 scene_1.mp3, 없으면 uuid로 고유 파일명 생성
+        suffix = f"scene_{scene_id}" if scene_id is not None else uuid.uuid4().hex[:8]
+        final_filename = str(OUTPUT_DIR / f"{suffix}.mp3")
+
         with open(final_filename, "wb") as f:
             f.write(audio_data)
-        
-        print(f"✨ {emotion} 생성 완료: {final_filename}")
-            
+
+        print(f"✨ {suffix} 생성 완료: {final_filename}")
         return final_filename
     else:
         print(f"❌ 합성 실패: {response.message}")
@@ -81,7 +84,7 @@ if __name__ == "__main__":
         print(f"⚠️ 경고: {REF_AUDIO_PATH} 파일이 없습니다.")
     else:
         voice_id = enroll_voice(REF_AUDIO_PATH)
-        generate_voice_qwen("어흥! 호랑이가 나타났다!", voice_id, emotion="fear")
-        generate_voice_qwen("와! 금도끼를 찾았어요!", voice_id, emotion="joyful")
-        generate_voice_qwen("나무꾼은 슬피 울었어요.", voice_id, emotion="sad")
-        generate_voice_qwen("옛날 옛날에 나무꾼이 살았어요.", voice_id, emotion="calm")
+        generate_voice_qwen("어흥! 호랑이가 나타났다!", voice_id, emotion="fear",   scene_id=1)
+        generate_voice_qwen("와! 금도끼를 찾았어요!",   voice_id, emotion="joyful", scene_id=2)
+        generate_voice_qwen("나무꾼은 슬피 울었어요.",   voice_id, emotion="sad",    scene_id=3)
+        generate_voice_qwen("옛날 옛날에 나무꾼이 살았어요.", voice_id, emotion="calm", scene_id=4)
