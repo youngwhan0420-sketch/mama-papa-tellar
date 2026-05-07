@@ -49,22 +49,22 @@ function StoryListViewPage() {
                 setScriptLines(data.scripts || []);
             })
             .catch((err) => console.error("스크립트 로딩 실패:", err));
-    
-    // 목소리 로드 추가
-    const keys = Object.keys(localStorage).filter(
-        (k) => k.startsWith("mpt_") && k.endsWith("_voice_id")
-    );
-    const list = keys.map((k) => ({
-        key: k,
-        name: k.replace("mpt_", "").replace("_voice_id", ""),
-        id: localStorage.getItem(k),
-    }));
-    setVoiceList(list);
-    if (list.length > 0) {
-        setNarratorKey(list[0].key);
-        setCharacterKey(list.length > 1 ? list[1].key : list[0].key);
-    }
-    setChildName(localStorage.getItem("mpt_child_name") || "");
+
+        // 목소리 로드 추가
+        const keys = Object.keys(localStorage).filter(
+            (k) => k.startsWith("mpt_") && k.endsWith("_voice_id")
+        );
+        const list = keys.map((k) => ({
+            key: k,
+            name: k.replace("mpt_", "").replace("_voice_id", ""),
+            id: localStorage.getItem(k),
+        }));
+        setVoiceList(list);
+        if (list.length > 0) {
+            setNarratorKey(list[0].key);
+            setCharacterKey(list.length > 1 ? list[1].key : list[0].key);
+        }
+        setChildName(localStorage.getItem("mpt_child_name") || "");
     }, []);
 
     const handleVoiceRegister = async (audioBlob) => {
@@ -143,27 +143,27 @@ function StoryListViewPage() {
 
     // 핸들러 함수 추가
     const handleNormalStart = () => {
-    setShowModeModal(false);
-    navigate(`/story/${selectedStory.story_id}`, {
-        state: { 
-            voiceId: localStorage.getItem(narratorKey),
-            childName,
-            useChildProtagonist,
-        },
-    });
-};
+        setShowModeModal(false);
+        navigate(`/story/${selectedStory.story_id}`, {
+            state: {
+                voiceId: localStorage.getItem(narratorKey),
+                childName,
+                useChildProtagonist,
+            },
+        });
+    };
 
     const handleRoleplayStart = () => {
-    setShowModeModal(false);
-    navigate(`/story/${selectedStory.story_id}`, {
-        state: {
-            narratorVoiceId: localStorage.getItem(narratorKey),
-            characterVoiceId: localStorage.getItem(characterKey),
-            childName,
-            useChildProtagonist,
-        },
-    });
-};
+        setShowModeModal(false);
+        navigate(`/story/${selectedStory.story_id}`, {
+            state: {
+                narratorVoiceId: localStorage.getItem(narratorKey),
+                characterVoiceId: localStorage.getItem(characterKey),
+                childName,
+                useChildProtagonist,
+            },
+        });
+    };
 
     return (
         <div className="tablet-page">
@@ -180,28 +180,30 @@ function StoryListViewPage() {
                     <p className="service-label">MAMA / PAPA TELLER</p>
                     <h1 className="main-title">우리 아이 동화 도서관</h1>
                 </header>
-                <div className="child-name-section">
-                    <span className="child-name-label">우리 아이 이름</span>
-                    <input
-                        className="child-name-input"
-                        type="text"
-                        placeholder="예: 민준, 윤서"
-                        value={childName}
-                        onChange={(e) => {
-                            setChildName(e.target.value);
-                            localStorage.setItem("mpt_child_name", e.target.value);
-                        }}
-                        maxLength={6}
-                    />
-                </div>
+                <div className="search-name-row">
+                    <div className="child-name-section">
+                        <span className="child-name-label">우리 아이 이름</span>
+                        <input
+                            className="child-name-input"
+                            type="text"
+                            placeholder="예: 민준, 윤서"
+                            value={childName}
+                            onChange={(e) => {
+                                setChildName(e.target.value);
+                                localStorage.setItem("mpt_child_name", e.target.value);
+                            }}
+                            maxLength={6}
+                        />
+                    </div>
 
-                <button
-                    type="button"
-                    className="story-search-link"
-                    onClick={() => navigate("/story/search")}
-                >
-                    🔍 동화 검색
-                </button>
+                    <button
+                        type="button"
+                        className="story-search-link"
+                        onClick={() => navigate("/story/search")}
+                    >
+                        🔍 동화 검색
+                    </button>
+                </div>
 
                 <section className="story-list-section">
                     <div className="story-grid">
@@ -298,7 +300,7 @@ function StoryListViewPage() {
                                 style={{ opacity: voiceList.length < 2 ? 0.5 : 1 }}
                             >
                                 🎭 역할극 모드
-                                {voiceList.length < 2 && <span style={{fontSize:"11px", display:"block"}}>목소리 2개 필요</span>}
+                                {voiceList.length < 2 && <span style={{ fontSize: "11px", display: "block" }}>목소리 2개 필요</span>}
                             </button>
                         </div>
                     </div>

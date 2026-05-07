@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
 import "./WhoIsItViewPage.css";
 
 function WhoIsItViewPage() {
@@ -162,10 +163,9 @@ function WhoIsItViewPage() {
                         <div className="quiz-image-container">
                             {/* 로딩 중일 때 보여줄 오버레이 */}
                             {isLoading && (
-                                <div className="loading-overlay">
-                                    <div className="loading-spinner"></div>
-                                    <p>엄마 아빠 목소리를 불러오고 있어...<br /> 잠시만 기다려줘! ✨</p>
-                                </div>
+                                <LoadingOverlay
+                                    message={<>엄마 아빠 목소리를 불러오고 있어...<br />잠시만 기다려줘! ✨</>}
+                                />
                             )}
                             <img src={quizData.imageUrl} alt="퀴즈 이미지" className="quiz-main-image" />
                             <button className="play-hint-btn" onClick={playHint}>

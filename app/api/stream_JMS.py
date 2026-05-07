@@ -118,7 +118,7 @@ def make_chunk(timeline_item: dict, audio_bytes: bytes) -> bytes:
 async def tts_scene(scene, voice_id: str) -> tuple:
     """장면 하나의 TTS 생성. 실패 시 temp_path=None 반환"""
     start         = time.time()
-    clean         = clean_text_combined(scene["text"])
+    clean         = scene.get("clean_text", clean_text_combined(scene.get("text", "")))
     scene_emotion = scene.get("emotion", "neutral")
     scene_id      = scene.get("id")
 
@@ -168,6 +168,16 @@ async def stream_story_audio_jms(
 
         scenes = story_data.get("scenes", [])
 
+        use_child = use_child_protagonist == "true" and bool(child_name)
+        for scene in scenes:
+            raw_text = scene.get("text_child", scene.get("text", "")) if use_child else scene.get("text", "")
+            if use_child:
+                raw_text = replace_child_name(raw_text, child_name)
+            
+            # 나중에 청크 JSON으로 보낼 예쁜 텍스트와, TTS 엔진이 읽을 정제된 텍스트를 나누어 저장해요.
+            scene["display_text"] = raw_text 
+            scene["clean_text"] = clean_text_combined(raw_text)
+
         def get_voice(scene):
             speaker = scene.get("speaker", "narrator")
             return narrator_vid if speaker == "narrator" else character_vid
@@ -179,6 +189,8 @@ async def stream_story_audio_jms(
             # 처음에 PREFETCH+1 개 장면 동시 TTS 시작
             task_queue = []
             for i in range(min(PREFETCH + 1, len(scenes))):
+                if i > 0:
+                    await asyncio.sleep(0.5)
                 task = asyncio.create_task(tts_scene(scenes[i], get_voice(scenes[i])))
                 task_queue.append((i, task))
 
@@ -190,6 +202,7 @@ async def stream_story_audio_jms(
 
                 # 다음 프리페치 장면 시작
                 if next_to_start < len(scenes):
+                    await asyncio.sleep(0.5)
                     task = asyncio.create_task(
                         tts_scene(scenes[next_to_start], get_voice(scenes[next_to_start]))
                     )
@@ -218,7 +231,7 @@ async def stream_story_audio_jms(
                         "total_scenes": len(scenes),
                         "start_time":   current_time_ms / 1000.0,
                         "duration":     len(scene_audio_with_pause) / 1000.0,
-                        "text":         scene["text"],
+                        "text":         scene.get("display_text", scene.get("text", "")),
                         "emotion":      scene_emotion,
                         "speaker":      scene.get("speaker", "narrator"),
                         "type":         scene.get("type", "narration"),
