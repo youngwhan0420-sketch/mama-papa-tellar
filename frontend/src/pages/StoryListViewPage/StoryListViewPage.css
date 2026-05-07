@@ -344,7 +344,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 0 16px;
+    padding-right: 16px;
     margin-bottom: 20px;
 }
 
@@ -428,32 +428,6 @@
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
-}
-
-.child-name-section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.child-name-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #5d4037;
-    white-space: nowrap;
-}
-
-.child-name-input {
-    border: 2px solid #ffcc80;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 14px;
-    outline: none;
-    width: 110px;
-}
-
-.child-name-input:focus {
-    border-color: #ff8c00;
 }
 
 .protagonist-toggle {

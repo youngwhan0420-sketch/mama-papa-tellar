@@ -4,6 +4,7 @@ import API_BASE_URL from "../../config/apiConfig";
 import MicButton from "../../components/MicButton/MicButton.jsx";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
 import Alert from "../../components/Alert.jsx";
+import ChildNameInput from "../../components/ChildNameInput.jsx";
 import "./StoryListViewPage.css";
 
 function StoryListViewPage() {
@@ -188,20 +189,7 @@ function StoryListViewPage() {
                     <h1 className="main-title">우리 아이 동화 도서관</h1>
                 </header>
                 <div className="search-name-row">
-                    <div className="child-name-section">
-                        <span className="child-name-label">우리 아이 이름</span>
-                        <input
-                            className="child-name-input"
-                            type="text"
-                            placeholder="예: 민준, 윤서"
-                            value={childName}
-                            onChange={(e) => {
-                                setChildName(e.target.value);
-                                localStorage.setItem("mpt_child_name", e.target.value);
-                            }}
-                            maxLength={6}
-                        />
-                    </div>
+                    <ChildNameInput onNameChange={setChildName} />
 
                     <button
                         type="button"

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
 import Alert from "../../components/Alert.jsx";
+import ChildNameInput from "../../components/ChildNameInput.jsx";
 import "./FamilyVoicesViewPage.css";
 
 function FamilyVoicesViewPage() {
@@ -163,6 +164,8 @@ function FamilyVoicesViewPage() {
                     <p className="service-label">MAMA / PAPA TELLER</p>
                     <h1 className="main-title">우리 가족 목소리함</h1>
                 </header>
+
+                <ChildNameInput />
 
                 <section className="voice-list-grid">
                     {voiceList.map((voice) => {
