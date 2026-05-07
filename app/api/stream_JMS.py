@@ -147,6 +147,7 @@ async def stream_story_audio_jms(
     voice_id: str = Query(None),
     narrator_voice_id: str = Query(None),
     character_voice_id: str = Query(None),
+    character_voice_map: str = Query(None),
     child_name: str = Query(None),
     use_child_protagonist: str = Query("false"),
 ):
@@ -169,18 +170,22 @@ async def stream_story_audio_jms(
         scenes = story_data.get("scenes", [])
 
         use_child = use_child_protagonist == "true" and bool(child_name)
+        char_map  = json.loads(character_voice_map) if character_voice_map else {}
+
         for scene in scenes:
             raw_text = scene.get("text_child", scene.get("text", "")) if use_child else scene.get("text", "")
             if use_child:
                 raw_text = replace_child_name(raw_text, child_name)
-            
-            # 나중에 청크 JSON으로 보낼 예쁜 텍스트와, TTS 엔진이 읽을 정제된 텍스트를 나누어 저장해요.
-            scene["display_text"] = raw_text 
-            scene["clean_text"] = clean_text_combined(raw_text)
+            scene["display_text"] = raw_text
+            scene["clean_text"]   = clean_text_combined(raw_text)
 
         def get_voice(scene):
             speaker = scene.get("speaker", "narrator")
-            return narrator_vid if speaker == "narrator" else character_vid
+            if speaker == "narrator":
+                return narrator_vid
+            elif char_map and speaker in char_map:
+                return char_map[speaker]
+            return character_vid
 
         async def scene_chunk_generator():
             current_time_ms = 0

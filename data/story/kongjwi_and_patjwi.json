@@ -21,7 +21,7 @@
     { 
       "id": 3, 
       "type": "dialogue", 
-      "speaker": "stepsister", 
+      "speaker": "patjwi", 
       "text": "나는 잔치에 가서 맛있는걸 배부르게 먹고 올테니 넌 일이나 하고 있으려무나", 
       "emotion": "happy", 
       "image": "/story_image/kongjwi_and_patjwi/kon2.png" 
@@ -46,7 +46,7 @@
     { 
       "id": 6, 
       "type": "dialogue", 
-      "speaker": "kogji", 
+      "speaker": "kongjwi", 
       "text": "세상에, 이렇게 예쁜 옷을 주시다니! 정말 감사합니다. 저도 이제 잔치에 갈 수 있어요!", 
       "emotion": "happy", 
       "image": "/story_image/kongjwi_and_patjwi/kon5.png"  
