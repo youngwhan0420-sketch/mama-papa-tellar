@@ -215,11 +215,7 @@ __marimo__/
 output/
 
 # 가상환경
-<<<<<<< HEAD
-p1t7/
-=======
 p1t7/
 
 # API_BASE_URL
 frontend/src/config/apiConfig.js
->>>>>>> ae06af8378d84a800677bfac10bbefafe100d5aa
