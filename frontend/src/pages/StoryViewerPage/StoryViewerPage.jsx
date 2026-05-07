@@ -7,6 +7,7 @@ import StorySlide from "../../components/StorySlide/StorySlide.jsx";
 import PlaybackRateControl from "../../components/PlaybackRateControl/PlaybackRateControl.jsx";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
 import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import Alert from "../../components/Alert.jsx";
 import "./StoryViewerPage.css";
 
 // ─── 완청 기록 ────────────────────────────────────────────────────────────────
@@ -35,6 +36,7 @@ function markStoryCompleted(storyId) {
 
 // ─── 컴포넌트 ─────────────────────────────────────────────────────────────────
 function StoryViewerPage() {
+  const alertRef = useRef();
   const { storyId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -130,7 +132,7 @@ function StoryViewerPage() {
   // ── 스트림 수신 + 오디오 관리 useEffect ────────────────────────────────────────────
   useEffect(() => {
     if (!voiceId && !(narratorVoiceId && characterVoiceMap)) {
-      alert("목소리 정보가 없어요. 메인으로 돌아갑니다.");
+      alertRef.current.show("목소리 정보가 없어요. 메인으로 돌아갑니다.", true, "🎙️");
       navigate("/");
       return;
     }
@@ -356,6 +358,7 @@ function StoryViewerPage() {
           </div>
         )}
       </main>
+      <Alert ref={alertRef} />
     </div>
   );
 }

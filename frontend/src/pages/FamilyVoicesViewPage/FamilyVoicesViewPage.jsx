@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
+import Alert from "../../components/Alert.jsx";
 import "./FamilyVoicesViewPage.css";
 
 function FamilyVoicesViewPage() {
+    const alertRef = useRef();
     const navigate = useNavigate();
     const [voiceList, setVoiceList] = useState([]);
     const [isRegistering, setIsRegistering] = useState(false);
@@ -43,7 +45,7 @@ function FamilyVoicesViewPage() {
                 window.dispatchEvent(new Event("voiceChanged"));
             }
 
-            alert("목소리가 보관함에서 사라졌어요.");
+            alertRef.current.show("목소리가 보관함에서 사라졌어요.", false, "❗");
             refreshVoiceList();
         }
     };
@@ -55,7 +57,7 @@ function FamilyVoicesViewPage() {
     // 이름 입력 후 확인 버튼: 스크립트 로드 후 '즉시' 녹음 시작
     const prepareRecording = async () => {
         if (!newVoiceName.trim()) {
-            alert("누구의 목소리인지 이름을 지어주세요! ✨");
+            alertRef.current.show("누구의 목소리인지 이름을 지어주세요!", false, "✨");
             return;
         }
 
@@ -68,7 +70,7 @@ function FamilyVoicesViewPage() {
             // 별도의 마이크 클릭 없이 바로 시스템 권한 요청 및 녹음 시작
             startRecordingProcess();
         } catch (err) {
-            alert("동화 나라 스크립트를 가져오지 못했어요. 잠시 후 다시 시도해 주세요.");
+            alertRef.current.show("동화 나라 스크립트를 가져오지 못했어요. 잠시 후 다시 시도해 주세요.", false, "❌");
         }
     };
 
@@ -87,7 +89,7 @@ function FamilyVoicesViewPage() {
             setIsRecording(true);
             setScriptIndex(0);
         } catch (err) {
-            alert("❌ 마이크 권한이 필요해요: " + err.message);
+            alertRef.current.show("❌ 마이크 권한이 필요해요: " + err.message, false, "❌");
         }
     };
 
@@ -124,12 +126,12 @@ function FamilyVoicesViewPage() {
                 localStorage.setItem(storageKey, data.voice_id);
                 localStorage.setItem("mpt_selected_voice_key", storageKey);
 
-                alert(`${newVoiceName} 목소리가 따뜻하게 담겼어요! 🎙️`);
+                alertRef.current.show(`${newVoiceName} 목소리가 따뜻하게 담겼어요!`, true, "🎙️");
                 refreshVoiceList();
                 setNewVoiceName("");
             }
         } catch (err) {
-            alert("목소리를 담는 데 실패했어요.");
+            alertRef.current.show("목소리를 담는 데 실패했어요.", false, "❌");
         } finally {
             setIsRegistering(false);
         }
@@ -141,11 +143,11 @@ function FamilyVoicesViewPage() {
         if (currentSelectedKey === key) {
             // 이미 선택된 것을 다시 누르면 취소
             localStorage.removeItem("mpt_selected_voice_key");
-            alert("목소리 선택이 해제되었어요. 새로운 목소리를 골라보세요! ✨");
+            alertRef.current.show("목소리 선택이 해제되었어요. 새로운 목소리를 골라보세요!", false, "✨");
         } else {
             // 다른 목소리 또는 새로 선택하는 경우
             localStorage.setItem("mpt_selected_voice_key", key);
-            alert("이제 이 목소리로 동화를 읽어드릴게요! 🏠");
+            alertRef.current.show("이제 이 목소리로 동화를 읽어드릴게요!", true, "🏠");
         }
         // 화면 갱신을 위해 배지가 트리거되도록 처리하거나, 필요한 경우 로컬 상태를 업데이트할 수 있습니다.
         window.dispatchEvent(new Event("voiceChanged"));
@@ -248,6 +250,7 @@ function FamilyVoicesViewPage() {
                     </section>
                 )}
             </main>
+            <Alert ref={alertRef} />
         </div>
     );
 }

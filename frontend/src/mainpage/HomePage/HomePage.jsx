@@ -1,10 +1,12 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import VoiceBadge from "../../components/VoiceBadge.jsx";
 import TreeGrowthStage from "../../components/TreeGrowthStage/TreeGrowthStage.jsx";
+import Alert from "../../components/Alert.jsx";
 import './HomePage.css';
 
 const HomePage = () => {
+    const alertRef = useRef();
     const navigate = useNavigate();
     // 배지로부터 전달받은 현재 선택된 목소리 키를 관리합니다.
     const [currentVoiceKey, setCurrentVoiceKey] = useState(null);
@@ -68,11 +70,17 @@ const HomePage = () => {
                         <div
                             key={menu.id}
                             className="menu-card"
-                            onClick={() => {if (!currentVoiceKey &&
-                                        menu.id !== 'family-voices' &&
-                                        menu.id !== 'settings') {alert("어떤 목소리로 이야기를 들려줄지 먼저 골라주세요! 🎙️");} 
-                                        else {navigate(menu.path);}
-                                }}
+                            onClick={() => {
+                                if (!currentVoiceKey &&
+                                    menu.id !== 'family-voices' &&
+                                    menu.id !== 'settings') {
+                                    alertRef.current.show("어떤 목소리로 이야기를 들려줄지 먼저 골라주세요!", false, "🎙️");
+                                }
+                                else {
+                                    navigate(menu.path);
+
+                                }
+                            }}
                         >
                             <div className="menu-icon-wrapper">
                                 <span className="menu-icon">{menu.icon}</span>
@@ -85,6 +93,7 @@ const HomePage = () => {
                     ))}
                 </main>
             </div>
+            <Alert ref={alertRef} />
         </div>
     );
 };

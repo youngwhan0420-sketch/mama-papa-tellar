@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
+import Alert from "../../components/Alert.jsx";
 import "./StorySearchPage.css";
 
 function StorySearchPage() {
+    const alertRef = useRef();
     const navigate = useNavigate();
 
     const [stories, setStories] = useState([]);
@@ -29,7 +31,7 @@ function StorySearchPage() {
         const voiceId = localStorage.getItem("mpt_mom_voice_id");
 
         if (!voiceId) {
-            alert("목소리를 먼저 등록해 주세요! 🎙️");
+            alertRef.current.show("목소리를 먼저 등록해 주세요!", false, "🎙️");
             navigate("/pages/StoryListViewPage");
             return;
         }
@@ -87,6 +89,7 @@ function StorySearchPage() {
                     ))}
                 </section>
             </main>
+            <Alert ref={alertRef} />
         </div>
     );
 }
