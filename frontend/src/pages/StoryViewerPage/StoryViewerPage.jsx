@@ -6,10 +6,11 @@ import StoryNavigation from "../../components/StoryNavigation/StoryNavigation.js
 import StorySlide from "../../components/StorySlide/StorySlide.jsx";
 import PlaybackRateControl from "../../components/PlaybackRateControl/PlaybackRateControl.jsx";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
+import LoadingOverlay from "../../components/LoadingOverlay.jsx";
+import Alert from "../../components/Alert.jsx";
 import "./StoryViewerPage.css";
 
-// 완청 편수를 localStorage에 1 올려주는 함수
-// 같은 동화를 여러 번 들어도 중복 카운트 안 되도록 storyId로 체크
+// ─── 완청 기록 ────────────────────────────────────────────────────────────────
 function markStoryCompleted(storyId) {
   const KEY_COUNT = 'mpt_completed_books';
   const KEY_RECENT = 'mpt_recent_stories';
@@ -33,202 +34,246 @@ function markStoryCompleted(storyId) {
   localStorage.setItem(KEY_COUNT, String(count));
 }
 
+// ─── 컴포넌트 ─────────────────────────────────────────────────────────────────
 function StoryViewerPage() {
+  const alertRef = useRef();
   const { storyId } = useParams();
-  const [dynamicTimeline, setDynamicTimeline] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 1. 상태 관리
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const voiceId = location.state?.voiceId;
+  const situation = location.state?.situation;
+  const narratorVoiceId = location.state?.narratorVoiceId;
+  const characterVoiceMap = location.state?.characterVoiceMap;
+  const childName = location.state?.childName || "";
+  const useChildProtagonist = location.state?.useChildProtagonist || false;
+
+  const [sceneQueue, setSceneQueue] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
+  const [streamDone, setStreamDone] = useState(false);
+  const [totalScenes, setTotalScenes] = useState(0);
+  const [dynamicTimeline, setDynamicTimeline] = useState(null); // 누락된 State 추가
 
-  // 속도 조절
   const [playbackRate, setPlaybackRate] = useState(
     () => Number(localStorage.getItem("mpt_playback_rate")) || 1
   );
 
-  // 2. 오디오 제어를 위한 Ref
   const audioRef = useRef(null);
+  const sceneQueueRef = useRef([]);
+  const currentIndexRef = useRef(0);
+  const streamDoneRef = useRef(false);
+  const waitIntervalRef = useRef(null);
+  const firstChunkRef = useRef(true);
 
-  // 3. 데이터 로드 (목소리 ID 및 상황 정보)
-  const voiceId = location.state?.voiceId;
-  const situation = location.state?.situation;
-  const narratorVoiceId = location.state?.narratorVoiceId;
-  const characterVoiceId = location.state?.characterVoiceId;
+  // ── 특정 장면 재생 ──────────────────────────────────────────────────────
+  const playScene = (index, queue) => {
+    if (index >= queue.length) return;
 
-  // 4. 현재 페이지 정보 (서버에서 받은 실제 데이터만 사용!)
-  const storyData = dynamicTimeline;
-  const currentPage = storyData.length > 0 ? storyData[currentPageIndex] : null;
-  const lastPageIndex = storyData.length > 0 ? storyData.length - 1 : 0;
-
-  const getSceneImage = (page) => {
-    const rawImage =
-      page?.image ||
-      page?.image_path ||
-      page?.storyImage ||
-      location.state?.storyImage ||
-      "";
-
-    if (!rawImage) return "";
-
-    // 외부 이미지 주소, base64, blob 주소면 그대로 사용
-    if (/^(https?:|data:|blob:)/.test(rawImage)) {
-      return rawImage;
+    if (waitIntervalRef.current) {
+      clearInterval(waitIntervalRef.current);
+      waitIntervalRef.current = null;
     }
 
-    // /illusts/ST_002/scene_1.png 처럼 이미 /로 시작하면 그대로 사용
-    if (rawImage.startsWith("/")) {
-      return rawImage;
-    }
-
-    // illusts/ST_002/scene_1.png 처럼 들어오면 앞에 / 붙이기
-    return `/${rawImage}`;
-  };
-
-  const handleEnded = () => {
-    setIsPlaying(false);
-    setIsFinished(true); // 동화가 끝났음을 알림
-  };
-
-  const handleReplay = () => {
-    setIsFinished(false);
-    setCurrentPageIndex(0);
     if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
+      audioRef.current.pause();
+      audioRef.current.onended = null;
+      audioRef.current = null;
     }
+
+    const { audioUrl } = queue[index];
+    const audio = new Audio(audioUrl);
+    audio.playbackRate = playbackRate;
+    audioRef.current = audio;
+
+    audio.onplay = () => setIsPlaying(true);
+    audio.onpause = () => setIsPlaying(false);
+
+    audio.onended = () => {
+      const nextIndex = currentIndexRef.current + 1;
+
+      if (nextIndex < sceneQueueRef.current.length) {
+        // 다음 장면 이미 도착 → 바로 재생
+        currentIndexRef.current = nextIndex;
+        setCurrentIndex(nextIndex);
+        playScene(nextIndex, sceneQueueRef.current);
+      } else if (streamDoneRef.current) {
+        // 스트림 완료 + 마지막 장면 → 완청
+        setIsPlaying(false);
+        setIsFinished(true);
+        markStoryCompleted(storyId);
+      } else {
+        // 다음 청크 아직 안 옴 → 폴링 대기
+        waitIntervalRef.current = setInterval(() => {
+          if (nextIndex < sceneQueueRef.current.length) {
+            clearInterval(waitIntervalRef.current);
+            waitIntervalRef.current = null;
+            currentIndexRef.current = nextIndex;
+            setCurrentIndex(nextIndex);
+            playScene(nextIndex, sceneQueueRef.current);
+          } else if (streamDoneRef.current) {
+            clearInterval(waitIntervalRef.current);
+            waitIntervalRef.current = null;
+            setIsPlaying(false);
+            setIsFinished(true);
+            markStoryCompleted(storyId);
+          }
+        }, 200);
+      }
+    };
+
+    audio.play().catch((err) => console.warn("재생 에러:", err));
+    setCurrentIndex(index);
+    currentIndexRef.current = index;
   };
 
+  // ── 스트림 수신 + 오디오 관리 useEffect ────────────────────────────────────────────
   useEffect(() => {
-    if (!voiceId && !(narratorVoiceId && characterVoiceId)) {
-      alert("목소리 정보가 없어요. 메인으로 돌아갑니다.");
+    if (!voiceId && !(narratorVoiceId && characterVoiceMap)) {
+      alertRef.current.show("목소리 정보가 없어요. 메인으로 돌아갑니다.", true, "🎙️");
       navigate("/");
       return;
     }
 
-    const initStoryAudio = async () => {
-      try {
-        // 1. 서버에서 오디오와 타임라인 한 번에 가져오기
-        const streamUrl = (narratorVoiceId && characterVoiceId)
-          ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_id=${characterVoiceId}`
-          : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}`;
-        const response = await fetch(streamUrl);
+    // 누적 버퍼 (Uint8Array)
+    let rawBuffer = new Uint8Array(0);
 
-        // 헤더에서 인코딩된 타임라인 추출 및 디코딩
-        const encoded = response.headers.get("X-Story-Timeline");
-        if (encoded) {
-          const decodedTimeline = JSON.parse(decodeURIComponent(encoded));
-          setDynamicTimeline(decodedTimeline);
+    const appendBuffer = (a, b) => {
+      const merged = new Uint8Array(a.length + b.length);
+      merged.set(a, 0);
+      merged.set(b, a.length);
+      return merged;
+    };
+
+    // 버퍼에서 완성된 청크를 꺼냄
+    const processBuffer = () => {
+      while (true) {
+        // 헤더 8바이트 확인
+        if (rawBuffer.length < 8) break;
+
+        const view = new DataView(rawBuffer.buffer, rawBuffer.byteOffset);
+        const jsonLength = view.getUint32(0, false);
+        const audioLength = view.getUint32(4, false);
+        const totalNeeded = 8 + jsonLength + audioLength;
+
+        // 청크 전체가 도착했는지 확인
+        if (rawBuffer.length < totalNeeded) break;
+
+        try {
+          const jsonBytes = rawBuffer.slice(8, 8 + jsonLength);
+          const audioBytes = rawBuffer.slice(8 + jsonLength, totalNeeded);
+
+          const timeline = JSON.parse(new TextDecoder().decode(jsonBytes));
+          const audioBlob = new Blob([audioBytes], { type: "audio/mpeg" });
+          const audioUrl = URL.createObjectURL(audioBlob);
+
+          const newQueue = [...sceneQueueRef.current, { timeline, audioUrl }];
+          sceneQueueRef.current = newQueue;
+          setSceneQueue([...newQueue]);
+
+          // 첫 장면 도착 → 즉시 재생 시작
+          if (firstChunkRef.current) {
+            firstChunkRef.current = false;
+            setIsLoading(false);
+            setTotalScenes(timeline.total_scenes || 0);
+            currentIndexRef.current = 0;
+            playScene(0, newQueue);
+          }
+        } catch (e) {
+          console.warn("청크 파싱 에러:", e);
         }
 
-        // 2. 오디오 객체 생성 및 Ref 저장
-        const blob = await response.blob();
-        const audio = new Audio(URL.createObjectURL(blob));
-        audioRef.current = audio;
-        // 속도 조절
-        audio.playbackRate = playbackRate;
+        // 처리한 청크만큼 버퍼에서 제거
+        rawBuffer = rawBuffer.slice(totalNeeded);
+      }
+    };
 
-        // 3. 리스너 등록 (로딩 완료, 재생/일시정지, 시간 업데이트, 종료)
-        audio.oncanplaythrough = () => setIsLoading(false);
-        audio.onplay = () => setIsPlaying(true);
-        audio.onpause = () => setIsPlaying(false);
-        audio.onended = () => {
-          setIsPlaying(false);
-          setIsFinished(true); // 동화 종료 오버레이 띄우기
-          markStoryCompleted(storyId);
-        };
+    const fetchStream = async () => {
+      try {
+        const streamUrl = (narratorVoiceId && characterVoiceMap)
+          ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_map=${encodeURIComponent(JSON.stringify(characterVoiceMap))}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
+          : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`;
+        const response = await fetch(streamUrl);
 
-        // 📝 클로저(Closure) 이슈를 피하기 위해 함수형 업데이트 사용
-        audio.ontimeupdate = () => {
-          const currentTime = audio.currentTime;
+        // 헤더에서 전체 씬 수 받아오기
+        const total = response.headers.get("X-Total-Scenes");
+        if (total) setTotalScenes(Number(total));
 
-          setDynamicTimeline((prevTimeline) => {
-            if (prevTimeline.length === 0) return prevTimeline;
+        const reader = response.body.getReader();
 
-            // 현재 시간보다 앞에 있는 마지막 인덱스를 찾음
-            const newIndex = prevTimeline.reduce((acc, page, idx) => {
-              const start = page.start_time || page.startTime || 0;
-              return currentTime >= start ? idx : acc;
-            }, 0);
-
-            setCurrentPageIndex((prev) =>
-              newIndex !== prev ? newIndex : prev,
-            );
-            return prevTimeline;
-          });
-        };
-
-        // 4. 재생 시도
-        await audio.play();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            streamDoneRef.current = true;
+            setStreamDone(true);
+            processBuffer(); // 마지막 남은 버퍼 처리
+            break;
+          }
+          rawBuffer = appendBuffer(rawBuffer, value);
+          processBuffer();
+        }
       } catch (err) {
-        console.warn("오디오 준비 중 에러 발생:", err);
+        console.warn("스트림 에러:", err);
         setIsLoading(false);
       }
     };
 
-    initStoryAudio();
+    fetchStream();
 
-    // 언마운트 시 정리 (클린업)
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
-    };
-  }, [storyId, voiceId, narratorVoiceId, characterVoiceId, navigate]);
-
-  // 5. 핸들러 함수
-  const handlePrevPage = () => {
-    if (currentPageIndex > 0 && storyData.length > 0) {
-      const prevIndex = currentPageIndex - 1;
-      setCurrentPageIndex(prevIndex);
-      // 수동 조작 시 실제 데이터의 시작 시간으로 오디오 이동
-      if (audioRef.current) {
-        audioRef.current.currentTime =
-          storyData[prevIndex].start_time ||
-          storyData[prevIndex].startTime ||
-          0;
+      if (waitIntervalRef.current) {
+        clearInterval(waitIntervalRef.current);
       }
-    }
+    };
+  }, [storyId, voiceId, narratorVoiceId, characterVoiceMap, navigate]);
+
+  // ── 핸들러 ──────────────────────────────────────────────────────────────
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    isPlaying ? audioRef.current.pause() : audioRef.current.play();
+  };
+
+  const handlePrevPage = () => {
+    const prevIndex = currentIndexRef.current - 1;
+    if (prevIndex < 0 || sceneQueueRef.current.length === 0) return;
+    playScene(prevIndex, sceneQueueRef.current);
   };
 
   const handleNextPage = () => {
-    if (currentPageIndex < lastPageIndex && storyData.length > 0) {
-      const nextIndex = currentPageIndex + 1;
-      setCurrentPageIndex(nextIndex);
-      // 수동 조작 시 실제 데이터의 시작 시간으로 오디오 이동
-      if (audioRef.current) {
-        audioRef.current.currentTime =
-          storyData[nextIndex].start_time ||
-          storyData[nextIndex].startTime ||
-          0;
-      }
-    }
+    const nextIndex = currentIndexRef.current + 1;
+    if (nextIndex >= sceneQueueRef.current.length) return;
+    playScene(nextIndex, sceneQueueRef.current);
   };
 
-  const handleGoHome = () => {
-    navigate("/pages/StoryListViewPage");
+  const handleReplay = () => {
+    setIsFinished(false);
+    playScene(0, sceneQueueRef.current);
   };
 
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-  };
+  const handleGoHome = () => navigate("/pages/StoryListViewPage");
 
   const handlePlaybackRateChange = (rate) => {
     setPlaybackRate(rate);
     localStorage.setItem("mpt_playback_rate", String(rate));
+    if (audioRef.current) audioRef.current.playbackRate = rate;
+  };
 
-    if (audioRef.current) {
-      audioRef.current.playbackRate = rate;
-    }
+  // ── 현재 장면 이미지 처리 ──────────────────────────────────────────────────
+  const currentScene = sceneQueue[currentIndex]?.timeline ?? null;
+  const lastPageIndex = Math.max(sceneQueue.length - 1, 0);
+
+  const getSceneImage = (scene) => {
+    const rawImage = scene?.image || scene?.storyImage || "";
+    if (!rawImage) return "";
+    if (/^(https?:|data:|blob:)/.test(rawImage)) return rawImage;
+    if (rawImage.startsWith("/")) return rawImage;
+    return `/${rawImage}`;
   };
 
   return (
@@ -246,9 +291,8 @@ function StoryViewerPage() {
             </div>
 
             <p className="page-count">
-              {/* 🗑️ 가짜 데이터 길이 대신 진짜 데이터 길이 사용 */}
-              {storyData.length > 0
-                ? `${currentPageIndex + 1} / ${storyData.length}`
+              {sceneQueue.length > 0
+                ? `${currentIndex + 1} / ${totalScenes}`
                 : "준비 중..."}
             </p>
           </div>
@@ -259,15 +303,15 @@ function StoryViewerPage() {
           )}
 
           {/* 메인 동화 슬라이드 */}
-          {isLoading || storyData.length === 0 || !currentPage ? (
-            <div className="loading-container">
-              <p>엄마 아빠 목소리를 열심히 가져오고 있어요...✨</p>
-            </div>
+          {isLoading || !currentScene ? (
+            <LoadingOverlay
+              message={<>엄마 아빠 목소리를 불러오고 있어...<br />잠시만 기다려줘! ✨</>}
+            />
           ) : (
             <StorySlide
               page={{
-                image: getSceneImage(currentPage),
-                text: currentPage.text,
+                image: getSceneImage(currentScene),
+                text: currentScene.text,
               }}
             />
           )}
@@ -281,7 +325,7 @@ function StoryViewerPage() {
           )} */}
 
           {/* 속도 조절 */}
-          {!isLoading && currentPage && (
+          {!isLoading && currentScene && (
             <PlaybackRateControl
               playbackRate={playbackRate}
               onChange={handlePlaybackRateChange}
@@ -290,7 +334,7 @@ function StoryViewerPage() {
 
           {/* 페이지 네비게이션 */}
           <StoryNavigation
-            currentPageIndex={currentPageIndex}
+            currentPageIndex={currentIndex}
             lastPageIndex={lastPageIndex}
             onPrev={handlePrevPage}
             onNext={handleNextPage}
@@ -314,6 +358,7 @@ function StoryViewerPage() {
           </div>
         )}
       </main>
+      <Alert ref={alertRef} />
     </div>
   );
 }

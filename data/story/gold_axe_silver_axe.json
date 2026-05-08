@@ -6,6 +6,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "옛날 옛날 어느 마을에, 정직한 나무꾼이 연못가에서 나무를 베다가 그만 손을 미끄러뜨리고 말았어요.",
+      "text_child": "옛날 옛날 어느 마을에, 정직한 나무꾼인 {이름이가} 연못가에서 나무를 베다가 그만 손을 미끄러뜨리고 말았어요.",
       "emotion": "warm",
       "image": "/story_image/gold_axe_silver_axe/gasa1.mp4"
     },
@@ -22,6 +23,7 @@
       "type": "narration",
       "speaker": "narrator",
       "text": "나무꾼이 엉엉 울자, 갑자기 물 위로 거품이 일더니 하얀 수염을 길게 기른 산신령님이 나타나셨어요.",
+      "text_child": "{이름이가} 엉엉 울자, 갑자기 물 위로 거품이 일더니 하얀 수염을 길게 기른 산신령님이 나타나셨어요.",
       "emotion": "scary",
       "image": "/story_image/gold_axe_silver_axe/gasa3.mp4"
     },

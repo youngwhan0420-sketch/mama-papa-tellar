@@ -15,6 +15,7 @@ router = APIRouter(prefix="/api/quizzes", tags=["Quiz"])
 BASE_DIR = Path(__file__).parent.parent.parent
 DATA_DIR = BASE_DIR / "data"
 QUIZ_JSON_PATH = DATA_DIR / "quizzes.json"
+QUIZ_RESPONSES_JSON_PATH = DATA_DIR / "quiz_responses.json"
 
 @router.get("")
 async def get_all_quizzes():
@@ -81,3 +82,61 @@ async def stream_quiz_audio(
     except Exception as e:
         print(f"퀴즈 음성 스트리밍 에러: {e}")
         raise HTTPException(status_code=500, detail="부모님 목소리를 만드는 데 실패했어요.")
+
+@router.get("/play_text")
+async def stream_text_audio(
+    text: str = Query(..., description="읽어줄 텍스트"),
+    voice_id: str = Query(..., description="부모님 목소리 ID"),
+    emotion: str = Query("happy", description="TTS 감정 파라미터")
+):
+    """정답/오답 텍스트를 부모님 목소리로 생성하여 스트리밍합니다."""
+    try:        
+        temp_path = await asyncio.to_thread(
+            generate_voice_qwen, text, voice_id=voice_id, emotion=emotion 
+        )
+
+        if not temp_path or not os.path.exists(temp_path):
+            raise Exception("Qwen3 TTS 음성 생성 실패")
+
+        scene_audio = AudioSegment.from_file(temp_path)
+        combined_audio = AudioSegment.silent(duration=500) + scene_audio + AudioSegment.silent(duration=500)
+
+        audio_buffer = io.BytesIO()
+        combined_audio.export(audio_buffer, format="mp3", bitrate="128k")
+        audio_buffer.seek(0)
+
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
+
+        return StreamingResponse(
+            audio_buffer,
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": "inline; filename=response_audio.mp3"
+            }
+        )
+
+    except Exception as e:
+        print(f"텍스트 음성 스트리밍 에러: {e}")
+        raise HTTPException(status_code=500, detail="부모님 리액션 목소리를 만드는 데 실패했어요.")
+    
+@router.get("/responses/pair")
+async def get_quiz_responses_pair():
+    """정답과 오답 메시지 한 쌍을 한 번에 반환합니다."""
+    try:
+        if not QUIZ_RESPONSES_JSON_PATH.exists():
+            raise HTTPException(status_code=404, detail="퀴즈 응답 데이터를 찾을 수 없어요.")
+
+        with open(QUIZ_RESPONSES_JSON_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        
+        import random
+        paired_responses = {
+            "correct": random.choice(data["scripts"]["correct"]),
+            "incorrect": random.choice(data["scripts"]["incorrect"])
+        }
+
+        return paired_responses
+        
+    except Exception as e:        
+        raise HTTPException(status_code=500, detail="퀴즈 응답을 불러오는 중에 문제가 생겼어요.")
