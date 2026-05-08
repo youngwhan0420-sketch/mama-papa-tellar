@@ -14,6 +14,7 @@
       "type": "dialogue",
       "speaker": "turtle",
       "text": "용왕님! 제가 뭍으로 나가서 꾀 많은 토끼를 속여서라도 반드시 간을 구해오겠습니다!",
+      "text_child": "용왕님! 제가 뭍으로 나가서 꾀 많은 {이름이를} 속여서라도 반드시 간을 구해오겠습니다!",
       "emotion": "stern",
       "image": "/story_image/rabbit_and_turtle/rat2.png"
     },
@@ -22,6 +23,7 @@
       "type": "dialogue",
       "speaker": "turtle",
       "text": "토끼님, 용궁에만 가면 평생 일도 안 하고 맛있는 것만 먹으며 살 수 있다니까요? 어서 제 등에 타시죠!",
+      "text_child": "{이름}님, 용궁에만 가면 평생 일도 안 하고 맛있는 것만 먹으며 살 수 있다니까요? 어서 제 등에 타시죠!",
       "emotion": "happy",
       "image": "/story_image/rabbit_and_turtle/rat3.png"
     },

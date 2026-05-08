@@ -15,6 +15,7 @@
       "type": "dialogue", 
       "speaker": "stepmother", 
       "text": "콩쥐야! 우리는 마을 잔치에 갈 테니, 너는 이 밑 빠진 항아리에 물을 가득 채우고 마당의 벼도 다 찧어 놓거라!", 
+      "text_child": "{이름아}! 우리는 마을 잔치에 갈 테니, 너는 이 밑 빠진 항아리에 물을 가득 채우고 마당의 벼도 다 찧어 놓거라!",
       "emotion": "angry", 
       "image": "/story_image/kongjwi_and_patjwi/kon2.png"  
     },
@@ -31,7 +32,7 @@
       "type": "narration", 
       "speaker": "narrator", 
       "text": "가족들이 잔치로 떠난 뒤, 콩쥐가 구멍 난 항아리에 물을 부며 울고 있을 때 어디선가 커다란 두꺼비가 나타나 몸으로 구멍을 막아주었답니다.", 
-      "text_child": "가족들이 잔치로 떠난 뒤, {이름이는} 구멍 난 항아리에 물을 부며 울고 있을 때 어디선가 커다란 두꺼비가 나타나 몸으로 구멍을 막아주었답니다.", 
+      "text_child": "가족들이 잔치로 떠난 뒤, {이름이가} 구멍 난 항아리에 물을 부며 울고 있을 때 어디선가 커다란 두꺼비가 나타나 몸으로 구멍을 막아주었답니다.", 
       "emotion": "sad", 
       "image": "/story_image/kongjwi_and_patjwi/kon3.png"  
     },
