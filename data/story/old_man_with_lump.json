@@ -31,7 +31,8 @@
       "id": 4, 
       "type": "dialogue", 
       "speaker": "goblin2", 
-      "text": "영감님, 그 아름다운 노래는 도대체 어디서 나오는 건가요?", 
+      "text": "영감님, 그 아름다운 노래는 도대체 어디서 나오는 건가요?",
+      "text_child": "{이름}님, 그 아름다운 노래는 도대체 어디서 나오는 건가요?", 
       "emotion": "happy", 
       "image": "/story_image/old_man_with_lump/old4.png" 
     },

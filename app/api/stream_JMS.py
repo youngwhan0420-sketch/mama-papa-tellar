@@ -34,8 +34,8 @@ def replace_child_name(text: str, name: str) -> str:
         .replace("{이름이와}", name + ("이와" if b else "와")) \
         .replace("{이름이의}", name + ("이의" if b else "의")) \
         .replace("{이름이}", name + ("이" if b else "")) \
+        .replace("{이름아}", name + ("아" if b else "야")) \
         .replace("{이름}", name)
-
 
 def normalize_image_path(raw_image):
     if not raw_image:

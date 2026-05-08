@@ -64,7 +64,10 @@ function StoryListViewPage() {
             id: localStorage.getItem(k),
         }));
         setVoiceList(list);
-        if (list.length > 0) {
+        const selectedKey = localStorage.getItem("mpt_selected_voice_key");
+        if (selectedKey && list.some(v => v.key === selectedKey)) {
+            setNarratorKey(selectedKey);
+        } else if (list.length > 0) {
             setNarratorKey(list[0].key);
         }
         setChildName(localStorage.getItem("mpt_child_name") || "");
