@@ -211,7 +211,7 @@ function WhoIsItViewPage() {
 
         return template
             .replace(/\[이름\/이\]/g, name + (hasBatchim ? "이" : ""))
-            .replace(/\[이름은\/는\]/g, name + (hasBatchim ? "이는" : "는"))
+            .replace(/\[이름(은|이는)\/는\]/g, name + (hasBatchim ? "이는" : "는"))
             .replace(/\[이름이\/가\]/g, name + (hasBatchim ? "이" : "가"))
             .replace(/\[이름아\/야\]/g, name + (hasBatchim ? "아" : "야"));
     };
