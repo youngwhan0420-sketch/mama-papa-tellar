@@ -1,90 +1,72 @@
 import os
 import uuid
 import requests
-import base64
-import pathlib
-import dashscope
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 환경 설정
 load_dotenv(Path(__file__).parent.parent.parent / '.env')
 
-API_KEY = os.getenv("DASHSCOPE_API_KEY")
 ROOT_DIR = Path(__file__).parent.parent.parent
 OUTPUT_DIR = ROOT_DIR / "output"
 OUTPUT_DIR.mkdir(exist_ok=True)
-REF_AUDIO_PATH = ROOT_DIR / "SKH_샘플0428.m4a"
 
-TARGET_MODEL = "qwen3-tts-vc-2026-01-22"
-ENROLLMENT_URL = "https://dashscope-intl.aliyuncs.com/api/v1/services/audio/tts/customization"
+LOCAL_TTS_URL = os.getenv("LOCAL_TTS_URL", "")
 
-# 1단계: 목소리 등록
-def enroll_voice(audio_path):
-    file_path = pathlib.Path(audio_path)
-    base64_str = base64.b64encode(file_path.read_bytes()).decode()
-    data_uri = f"data:audio/mp4;base64,{base64_str}"
 
-    payload = {
-        "model": "qwen-voice-enrollment",
-        "input": {
-            "action": "create",
-            "target_model": TARGET_MODEL,
-            "preferred_name": "parent_voice",
-            "audio": {"data": data_uri}
-        }
-    }
-    headers = {
-        "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json"
-    }
+def generate_voice_qwen(text: str, voice_id: str = None, emotion: str = "joyful", speaker: str = "Sohee", scene_id=None):
+    """
+    RTX PC /tts를 호출해서 부모 목소리 클로닝 TTS를 생성해요.
 
-    resp = requests.post(ENROLLMENT_URL, json=payload, headers=headers)
-    if resp.status_code != 200:
-        raise RuntimeError(f"목소리 등록 실패: {resp.status_code}, {resp.text}")
-
-    voice_id = resp.json()["output"]["voice"]
-    print(f"✅ 목소리 등록 완료: {voice_id}")
-    return voice_id
-
-# 2단계: TTS 생성
-# scene_id를 받아서 고유한 파일명으로 저장 → 동시 요청 시 파일 덮어쓰기 방지
-def generate_voice_qwen(text, voice_id, emotion="joyful", scene_id=None):
-
-    dashscope.base_http_api_url = 'https://dashscope-intl.aliyuncs.com/api/v1'
-
-    response = dashscope.MultiModalConversation.call(
-        model=TARGET_MODEL,
-        api_key=API_KEY,
-        text=text,
-        voice=voice_id,
-        stream=False
-    )
-
-    if response.status_code == 200:
-        audio_url = response.output.audio["url"]
-        audio_data = requests.get(audio_url).content
-
-        # scene_id가 있으면 scene_1.mp3, 없으면 uuid로 고유 파일명 생성
-        suffix = f"scene_{scene_id}" if scene_id is not None else uuid.uuid4().hex[:8]
-        final_filename = str(OUTPUT_DIR / f"{suffix}.mp3")
-
-        with open(final_filename, "wb") as f:
-            f.write(audio_data)
-
-        print(f"✨ {suffix} 생성 완료: {final_filename}")
-        return final_filename
-    else:
-        print(f"❌ 합성 실패: {response.message}")
+    voice_id: /api/voice/register가 반환한 RTX PC 내 파일경로
+              (예: /home/ks/voices/parent_44fb939d.wav)
+    scene_id: 동시 요청 시 파일 덮어쓰기 방지용 고유 ID
+    """
+    if not LOCAL_TTS_URL:
+        print("❌ LOCAL_TTS_URL이 설정되지 않았어요.")
         return None
 
-# 실행
+    if not voice_id:
+        print("❌ voice_id(부모 목소리 경로)가 없어요.")
+        return None
+
+    payload = {
+        "text": text,
+        "language": "Korean",
+        "ref_audio_path": voice_id,
+    }
+
+    try:
+        response = requests.post(
+            f"{LOCAL_TTS_URL}/tts",
+            json=payload,
+            timeout=120,
+        )
+
+        if response.status_code == 200:
+            # scene_id 있으면 scene_1.wav, 없으면 emotion_result.wav
+            suffix = f"scene_{scene_id}" if scene_id is not None else f"{emotion}_result"
+            final_filename = str(OUTPUT_DIR / f"{suffix}.wav")
+            with open(final_filename, "wb") as f:
+                f.write(response.content)
+            print(f"✨ {suffix} 생성 완료: {final_filename}")
+            return final_filename
+        else:
+            print(f"❌ 합성 실패: {response.status_code}, {response.text}")
+            return None
+
+    except requests.exceptions.RequestException as e:
+        print(f"❌ 서버 연결 실패: {e}")
+        return None
+
+
+def enroll_voice(audio_path: str) -> str:
+    print("⚠️ enroll_voice: 로컬 서버는 /register 엔드포인트를 사용해요. voice_qwen.py의 /register API를 이용해 주세요.")
+    return "local_default"
+
+
 if __name__ == "__main__":
-    if not REF_AUDIO_PATH.exists():
-        print(f"⚠️ 경고: {REF_AUDIO_PATH} 파일이 없습니다.")
-    else:
-        voice_id = enroll_voice(REF_AUDIO_PATH)
-        generate_voice_qwen("어흥! 호랑이가 나타났다!", voice_id, emotion="fear",   scene_id=1)
-        generate_voice_qwen("와! 금도끼를 찾았어요!",   voice_id, emotion="joyful", scene_id=2)
-        generate_voice_qwen("나무꾼은 슬피 울었어요.",   voice_id, emotion="sad",    scene_id=3)
-        generate_voice_qwen("옛날 옛날에 나무꾼이 살았어요.", voice_id, emotion="calm", scene_id=4)
+    TEST_VOICE_ID = "/home/ks/voices/parent_44fb939d.wav"  # 실제 경로로 변경
+    generate_voice_qwen("어흥! 호랑이가 나타났다!", voice_id=TEST_VOICE_ID, emotion="fear",   scene_id=1)
+    generate_voice_qwen("와! 금도끼를 찾았어요!",   voice_id=TEST_VOICE_ID, emotion="joyful", scene_id=2)
+    generate_voice_qwen("나무꾼은 슬피 울었어요.",   voice_id=TEST_VOICE_ID, emotion="sad",    scene_id=3)
+    generate_voice_qwen("옛날 옛날에 나무꾼이 살았어요.", voice_id=TEST_VOICE_ID, emotion="calm", scene_id=4)
