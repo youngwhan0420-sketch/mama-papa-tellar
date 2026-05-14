@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
+import APP_ACCESS_HANDSHAKE_KEY from "../../config/envConfig";
 import MicButton from "../../components/MicButton/MicButton.jsx";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
 import Alert from "../../components/Alert.jsx";
@@ -42,12 +43,16 @@ function StoryListViewPage() {
     };
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/stories`)
+        fetch(`${API_BASE_URL}/api/stories`, {
+            headers: { "X-Handshake-Key": APP_ACCESS_HANDSHAKE_KEY }
+        })
             .then((res) => res.json())
             .then((data) => setStories(data.story))
             .catch((err) => console.error("데이터 로딩 실패:", err));
 
-        fetch(`${API_BASE_URL}/api/voice/scriptLines`)
+        fetch(`${API_BASE_URL}/api/voice/scriptLines`, {
+            headers: { "X-Handshake-Key": APP_ACCESS_HANDSHAKE_KEY }
+        })
             .then((res) => res.json())
             .then((data) => {
                 setScriptLines(data.scripts || []);
@@ -81,6 +86,9 @@ function StoryListViewPage() {
         try {
             const response = await fetch(`${API_BASE_URL}/api/voice/register`, {
                 method: "POST",
+                headers: {
+                    "X-Handshake-Key": APP_ACCESS_HANDSHAKE_KEY
+                },
                 body: formData,
             });
 

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
+import APP_ACCESS_HANDSHAKE_KEY from "../../config/envConfig";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
 import Alert from "../../components/Alert.jsx";
 import "./StorySearchPage.css";
@@ -13,7 +14,11 @@ function StorySearchPage() {
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/stories`)
+        fetch(`${API_BASE_URL}/api/stories`, {
+            headers: {
+                "X-Handshake-Key": APP_ACCESS_HANDSHAKE_KEY // MODIFIED
+            }
+        })
             .then((res) => res.json())
             .then((data) => setStories(data.story || []))
             .catch((err) => console.error("동화 데이터 로딩 실패:", err));

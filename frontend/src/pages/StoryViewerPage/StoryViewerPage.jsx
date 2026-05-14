@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
+import APP_ACCESS_HANDSHAKE_KEY from "../../config/envConfig";
 import EmotionBar from "../../components/EmotionBar/EmotionBar.jsx";
 import StoryNavigation from "../../components/StoryNavigation/StoryNavigation.jsx";
 import StorySlide from "../../components/StorySlide/StorySlide.jsx";
@@ -194,7 +195,12 @@ function StoryViewerPage() {
         const streamUrl = (narratorVoiceId && characterVoiceMap)
           ? `${API_BASE_URL}/api/stream/play/${storyId}?narrator_voice_id=${narratorVoiceId}&character_voice_map=${encodeURIComponent(JSON.stringify(characterVoiceMap))}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`
           : `${API_BASE_URL}/api/stream/play/${storyId}?voice_id=${voiceId}&child_name=${encodeURIComponent(childName)}&use_child_protagonist=${useChildProtagonist}`;
-        const response = await fetch(streamUrl);
+
+        const response = await fetch(streamUrl, {
+          headers: {
+            "X-Handshake-Key": APP_ACCESS_HANDSHAKE_KEY
+          }
+        });
 
         // 헤더에서 전체 씬 수 받아오기
         const total = response.headers.get("X-Total-Scenes");
