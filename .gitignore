@@ -219,3 +219,4 @@ p1t7/
 
 # API_BASE_URL
 frontend/src/config/apiConfig.js
+frontend/src/config/envConfig.js

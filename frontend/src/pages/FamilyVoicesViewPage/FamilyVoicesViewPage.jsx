@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/apiConfig";
+import APP_ACCESS_HANDSHAKE_KEY from "../../config/envConfig";
 import VoiceBadge from "../../components/VoiceBadge.jsx";
 import Alert from "../../components/Alert.jsx";
 import ChildNameInput from "../../components/ChildNameInput.jsx";
@@ -63,7 +64,13 @@ function FamilyVoicesViewPage() {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/voice/scriptLines`);
+            const response = await fetch(`${API_BASE_URL}/api/voice/scriptLines`, {
+                method: "GET",
+                headers: {
+                    "X-Handshake-Key": APP_ACCESS_HANDSHAKE_KEY
+                }
+            });
+
             const data = await response.json();
             setScriptLines(data.scripts || []);
             setShowNameInput(false);
@@ -118,6 +125,9 @@ function FamilyVoicesViewPage() {
         try {
             const response = await fetch(`${API_BASE_URL}/api/voice/register`, {
                 method: "POST",
+                headers: {
+                    "X-Handshake-Key": APP_ACCESS_HANDSHAKE_KEY
+                },
                 body: formData,
             });
             const data = await response.json();
